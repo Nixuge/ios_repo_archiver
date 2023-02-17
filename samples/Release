@@ -1,0 +1,23 @@
+Origin: YouRepo
+Label: YouRepo
+Suite: stable
+Version: 1.0
+Codename: ios
+Architectures: appletvos-arm darwin-arm iphoneos-arm watchos-arm
+Components: main
+Description: Main source for YouRepo
+Date: Mon, 13 Feb 2023 14:53:32 +0100
+MD5Sum:
+ 9f5056735ea3de40d4cc1f86ff5fe2b1 2227518 Packages
+ c72690cea3eb1d67b121c9870dbaff56 287925 Packages.bz2
+ 5dac1f8ca6093f4df520a491a93fccae 357251 Packages.gz
+ 077685e77cdf75eb44ef6b145077cf1b 288923 Packages.lzma
+ e4f5ba69b681666e763b0bf94bc35c67 298600 Packages.xz
+ 9ac92c091f88ae4fad78f373a471c8e1 301032 Packages.zst
+SHA256:
+ 153ff8d58176bdd7236fff3896297f38c46d8c5825b7f567aa597365e1742579 2227518 Packages
+ befb3bde155907dcb5239598f681de171d41f75eb95fada67375520b80a5fa0a 287925 Packages.bz2
+ 4ddf40cdee59ad88315f632531c7934341906f63e0914e2b35e7a650ed5c906c 357251 Packages.gz
+ 1264a58f1398eb223f114425777aa6ff3912770a80abb60700c2587e3fc9c62a 288923 Packages.lzma
+ 25dcdd5dbe9594227c001dc6867677a7acabe96bd83a5b0732e1229d86efa0d5 298600 Packages.xz
+ 9c1515fe52ccc3337ddf224d9a6946b0a66bc2032d0a1856a0c4f790c497dce0 301032 Packages.zst
