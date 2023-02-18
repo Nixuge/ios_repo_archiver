@@ -13,7 +13,8 @@ class File:
     known_hashes = [
         "md5sum",
         "sha512",
-        "sha256"
+        "sha256",
+        "sha1"
     ]
 
     def __init__(self, file: str):

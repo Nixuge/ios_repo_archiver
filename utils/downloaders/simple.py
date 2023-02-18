@@ -11,7 +11,7 @@ import mimetypes
 from utils.file import get_create_path
 
 class Downloader:
-    url: str
+    url: str | None
     extension: str
 
     headers: dict[str, str] = {
@@ -24,7 +24,7 @@ class Downloader:
     default_extension: str = ".html"
 
     def __init__(self, url: str):
-        self.url = url
+        self.url = url if url.startswith("https://") or url.startswith("http://") else None
         # if HTML, only saving the actual HTML and no CSS/anything else
         # TODO: download E V E R Y T H I N G
 
@@ -48,6 +48,9 @@ class Downloader:
         return ext
 
     def download(self, folder: str) -> Result:
+        if not self.url:
+            return Result(valid_url=False)
+    
         r = requests.get(self.url, headers=self.headers)
         if r.status_code != 200:
             return Result(status_code=r.status_code)

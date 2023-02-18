@@ -2,9 +2,7 @@ from objects.files.file import File
 
 
 class Package(File):
-    #TODO:
-    #add dev, priority, homepage
-    known_keys = [
+    known_keys = File.known_hashes + [
         "package",
         "name",        
         "version",     
@@ -17,9 +15,6 @@ class Package(File):
         "description",
         "depiction",
         "size",
-        "md5sum",
-        "sha256",
-        "sha512",
         "filename",
         "moderndepiction",
         "icon",
@@ -36,6 +31,14 @@ class Package(File):
         "dev",
         "priority"
     ]
+
+    # Keys known but not worth having a whole column for
+    # Eg. here, Sponsor
+    # this is only to avoid printing when encountering smth from
+    # additional data that's already known
+    known_but_additional = (
+        "sponsor",
+    )
 
     fix_keys = {
         "recommends": "suggests",
@@ -71,14 +74,15 @@ class Package(File):
             key = self._get_fixed_val(key)
 
             # Made that way to use capitalization from the known keys table
-            if self.known(key):
+            if key in self.known_keys:
                 self.last_key = key
-                if self.is_in(key, self.known_hashes):
+                if key in self.known_hashes:
                     self.hashes[key] = value
                 else:
                     self.data[key] = value
                 continue
             
             self.additional_data[key] = value
-            print(f"UNKNOWN KEY FOR LINE: {line}")
+            if not key in self.known_but_additional:
+                print(f"UNKNOWN KEY FOR LINE: {line}")
         

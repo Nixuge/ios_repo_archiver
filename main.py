@@ -1,9 +1,6 @@
-from managers.packagedownload import PackageDownload
+from objects.packagedownload import PackageDownload
 from objects.sqlinfo import SQLInfo
-from utils.downloaders.tweak import Downloader
 from objects.repo import Repo
-from objects.files.package import Package
-from objects.files.release import Release
 
 import sqlite3
 
@@ -20,7 +17,7 @@ from utils.file import Folder
 
 Folder.create_all()
 
-repo = Repo("havoc", "https://havoc.app/")
+repo = Repo("alfhaily", "https://apt.alfhaily.me/")
 
 connection = sqlite3.connect("test.db")
 cursor = connection.cursor()
@@ -35,7 +32,7 @@ for thing in repo.packages:
     
     pkgdl = PackageDownload(repo, thing, sqldata)
     print("===Starting DL===")
-    pkgdl.download_all_add_db()
+    pkgdl.download_package_content_db()
     print("===Done with DL===")
 
 

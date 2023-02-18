@@ -1,7 +1,7 @@
 from objects.files.file import File
 
 class Release(File):
-    known_keys = [
+    known_keys = File.known_hashes + [
         "origin",
         "label",
         "suite",
@@ -10,10 +10,7 @@ class Release(File):
         "architectures",
         "components",
         "description",
-        "date",
-        "md5sum",
-        "sha512",
-        "sha256"
+        "date"
     ]
 
     files: dict
