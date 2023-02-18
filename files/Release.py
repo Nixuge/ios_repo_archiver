@@ -16,7 +16,7 @@ class Release(File):
         "SHA256"
     ]
 
-    files = {}
+    files: dict
 
     def _add_hash(self, line: str) -> None:
         keys = line.split(' '); keys.pop(0)
@@ -32,6 +32,8 @@ class Release(File):
     
     def __init__(self, file: str):
         self.data = {}
+        self.files = {}
+
         for line in file.split("\n"):
             # avoid empty lines
             if line == '': 

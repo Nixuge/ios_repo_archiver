@@ -18,6 +18,7 @@ class Package(File):
         "Size",
         "MD5sum",
         "SHA256",
+        "SHA512",
         "Filename",
         "SileoDepiction",
         "Icon",
@@ -34,13 +35,17 @@ class Package(File):
         "XBS-Build-Version" # Purely for Legizmo on Chariz
     ]
 
+    hashes: dict
+
     def __init__(self, file: str):
         self.data = {}
+        self.hashes = {}
         for line in file.split("\n"):
             # avoid empty lines
             if line == '': continue
 
             # handle multi-lines keys
+            # shouldn't be hashes in there so not handled
             if line[0] == ' ':
                 self.data[known_key] += "\n" + line[1:]
                 continue
@@ -52,7 +57,10 @@ class Package(File):
             known_key = self.is_in(key, self.known_keys)
             if known_key:
                 self.last_key = key
-                self.data[known_key] = value
+                if self.is_in(key, self.known_hashes):
+                    self.hashes[known_key] = value
+                else:
+                    self.data[known_key] = value
                 continue
 
             print(f"UNKNOWN KEY FOR LINE: {line}")
