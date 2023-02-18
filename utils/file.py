@@ -23,14 +23,18 @@ class Folder:
     temp = base + "z_tmp/"
     debs = base + "debs/"
     depiction = base + "depictions/"
-    sileodepiction = base + "sileodepictions/"
+    moderndepiction = base + "moderndepiction/"
     icon = base + "icons/"
     header = base + "headers/"
 
 
-# Unused
-def save_file(temp_name: str, folder: str, hash: str, extension: str):
+def get_create_path(folder: str, hash: str) -> str:
     folder = f"{folder}/{hash[0]}/"
     if not os.path.exists(folder):
         os.makedirs(folder)
+    return folder
+
+# Unused
+def save_file(temp_name: str, folder: str, hash: str, extension: str):
+    get_create_path(folder, hash)
     shutil.move(Folder.temp + temp_name, f"{folder}{hash}.{extension}")

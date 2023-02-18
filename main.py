@@ -20,7 +20,7 @@ from utils.file import Folder
 
 Folder().create()
 
-repo = Repo("yourrepo", "https://yourepo.com/")
+repo = Repo("havoc", "https://havoc.app/")
 
 connection = sqlite3.connect("test.db")
 cursor = connection.cursor()
@@ -34,7 +34,8 @@ for thing in repo.packages:
         continue
     
     pkgdl = PackageDownload(repo, thing, sqldata)
-    pkgdl.download_all()
+    pkgdl.download_all_add_db()
+    print("done 1")
 
     input()
 

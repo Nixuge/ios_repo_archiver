@@ -27,9 +27,9 @@ class File:
 
     @staticmethod
     def _get_key_data(line: str) -> tuple[str, str]:
-        data = line.split(':')
+        data = line.split(':', 1)
         key = data[0]
-        value = ''.join(data[1:])
+        value = data[1]
         # cant split by ": " bc of hashes, need this
         if value != '' and value[0] == ' ':
             value = value[1:]

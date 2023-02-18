@@ -1,4 +1,4 @@
 *.pyc
-debs/*
+downloads/*
 tmp/
 test.db

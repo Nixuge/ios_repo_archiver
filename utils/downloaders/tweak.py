@@ -7,10 +7,10 @@ import os
 import requests
 import shutil
 from utils.downloaders.result import Result
+from utils.file import Folder, get_create_path
 
 from utils.stringutils import random_string
 
-        
 
 class Downloader:
     url: str
@@ -40,16 +40,16 @@ class Downloader:
         # bit verbose but good enough for readability
         # matches md5 first then sha256 then sha512
         # if the 1st checked matches, it passes anyways
-        if "MD5Sum" in self.hashes:
-            if self.hashes["MD5Sum"] != md5:
+        if "md5sum" in self.hashes:
+            if self.hashes["md5sum"] != md5:
                 return False
-        elif "SHA256" in self.hashes:
+        elif "sha256" in self.hashes:
             sha256 = self._make_hash(filename, hashlib.sha256)
-            if self.hashes["SHA256"] != sha256:
+            if self.hashes["sha256"] != sha256:
                 return False
-        elif "SHA512" in self.hashes:
+        elif "sha512" in self.hashes:
             sha512 = self._make_hash(filename, hashlib.sha512)
-            if self.hashes["SHA512"] != sha512:
+            if self.hashes["sha512"] != sha512:
                 return False
         else:
             return False
@@ -80,7 +80,7 @@ class Downloader:
 
         md5 = md5.hexdigest()
 
-        folder = f"debs/{md5[0]}"
+        folder = get_create_path(Folder.debs, md5)
         full_path = f"{folder}/{md5}.deb"
 
         if not self._hash_match(temp_filename, md5):

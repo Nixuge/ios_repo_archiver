@@ -19,4 +19,6 @@ class Result:
         self.hash = hash
         self.finished = finished
         if temp_filename:
-            os.system(f"rm {temp_filename}")
+            if os.path.exists(temp_filename):
+                os.remove(temp_filename)
+                # os.system(f"rm {temp_filename}")

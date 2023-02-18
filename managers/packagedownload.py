@@ -24,7 +24,7 @@ class PackageDownload:
     
     def _download_other_data(self) -> list[str | None]:
         other_data: list[str | None] = []
-        for key in ("depiction", "sileodepiction", "icon", "header"):
+        for key in ("depiction", "moderndepiction", "icon", "header"):
             if not key in self.package.data:
                 other_data.append(None)
                 continue
@@ -42,11 +42,10 @@ class PackageDownload:
             
         return other_data
 
-    def download_all(self):
+    def download_all_add_db(self):
         result = TweakDL(self.repo.url, self.package.data["filename"], self.package.hashes).download()
         if not result.finished:
-            print("Error!")
-            print(result.status_code)
+            print("unfinished")
             return None #TODO: return proper error
         
         other_keys = self._download_other_data()

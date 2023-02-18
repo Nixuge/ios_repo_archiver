@@ -3,7 +3,7 @@
 # just in case
 # it doesn't really matter anyways tbh as debs themselves take much more space
 
-# depiction, sileodepiction, icon, header
+# depiction, moderndepiction, icon, header
 # -> saved as hashes (md5s), only saved in file form directly
 # (party to avoid the db itself to grow too much w uninteresting things)
 
@@ -17,6 +17,7 @@ class Queries:
 
                     section VARCHAR(255),
                     architecture VARCHAR(255),
+                    priority VARCHAR(255),
                     tag VARCHAR(2048),
 
                     depends VARCHAR(2048),
@@ -33,11 +34,13 @@ class Queries:
                     author VARCHAR(1024),
                     maintainer VARCHAR(1024),
                     support VARCHAR(1024),
+                    dev VARCHAR(1024),
 
+                    homepage VARCHAR(1024),
                     description TEXT,
 
                     depiction VARCHAR(32),
-                    sileodepiction VARCHAR(32),
+                    moderndepiction VARCHAR(32),
 
                     icon VARCHAR(32),
                     header VARCHAR(32),
@@ -52,7 +55,7 @@ class Queries:
     
     @staticmethod
     def get_insert_query(table: str) -> str:
-        return f"""INSERT INTO {table} VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"""
+        return f"""INSERT INTO {table} VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"""
     
     @staticmethod
     def get_where_contains_key(table: str, column: str, value: str):

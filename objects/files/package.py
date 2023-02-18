@@ -1,8 +1,9 @@
 from objects.files.file import File
 
-#TODO: save Depiction & SileoDepiction & Icon & Header
 
 class Package(File):
+    #TODO:
+    #add dev, priority, homepage
     known_keys = [
         "package",
         "name",        
@@ -20,7 +21,7 @@ class Package(File):
         "sha256",
         "sha512",
         "filename",
-        "sileodepiction",
+        "moderndepiction",
         "icon",
         "header",
         "tag",
@@ -31,9 +32,15 @@ class Package(File):
         "breaks",
         "provides",
         "predepends",
+        "homepage",
+        "dev",
+        "priority"
     ]
 
     fix_keys = {
+        "recommends": "suggests",
+        "sileodepiction": "moderndepiction",
+        "tags": "tag",
         "conflict": "conflicts",
         "pre-depends": "predepends",
         "installed-size": "installedsize"
