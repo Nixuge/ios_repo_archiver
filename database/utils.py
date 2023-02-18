@@ -1,6 +1,6 @@
 from sqlite3 import Cursor
 from database.queries import Queries
-from objects.files.Package import Package
+from objects.files.package import Package
 
 
 class Utils:
@@ -20,17 +20,19 @@ class Utils:
         # not here as processed differently
 
     @staticmethod
-    def build_args(package: Package) -> list[str]:
-        final_args: list[str] = []
+    def build_args(package: Package, downloadable_elements: list[str | None]) -> list[str | None]:
+        final_args: list[str | None] = []
         # All normal elements
         for arg in Utils.get_dict_args_order():
             final_args.append(package.data.get(arg, None))
         
-        # TODO: ADD ELEMENTS ("depiction", "sileodepiction", "icon", "header")
-
+        # Add ("depiction", "sileodepiction", "icon", "header")
+        for element in downloadable_elements:
+            final_args.append(element)
+        
         # Add additional data
         if package.additional_data == None or len(package.additional_data) == 0:
-            final_args.append(None) # type: ignore 
+            final_args.append(None)
         else:
             final_args.append(str(package.additional_data))
         
@@ -45,5 +47,4 @@ class Utils:
     def contains_md5(table: str, md5: str, cursor: Cursor):
         query = Queries.get_where_contains_md5(table, md5)
 
-        result = cursor.execute(query)
-        return result.fetchone()
+        return cursor.execute(query).fetchone()

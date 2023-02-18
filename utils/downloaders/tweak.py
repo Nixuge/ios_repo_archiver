@@ -38,6 +38,8 @@ class Downloader:
 
     def _hash_match(self, filename: str, md5: str) -> bool:
         # bit verbose but good enough for readability
+        # matches md5 first then sha256 then sha512
+        # if the 1st checked matches, it passes anyways
         if "MD5Sum" in self.hashes:
             if self.hashes["MD5Sum"] != md5:
                 return False
@@ -85,7 +87,7 @@ class Downloader:
             return Result(hash_check=False, temp_filename=temp_filename)
 
         if os.path.isfile(full_path):
-            return Result(already_exists=True, hash=full_path, temp_filename=temp_filename)
+            return Result(hash=full_path, temp_filename=temp_filename, already_exists=True, finished=True)
 
 
         folder = f"debs/{md5[0]}"
@@ -95,4 +97,4 @@ class Downloader:
         
         shutil.move(temp_filename, full_path)
 
-        return Result(hash=md5)
+        return Result(hash=md5, finished=True)

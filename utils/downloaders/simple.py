@@ -45,9 +45,9 @@ class Downloader:
         filename = folder + md5 + self.extension
 
         if os.path.isfile(filename):
-            return Result(hash=md5, already_exists=True)
+            return Result(hash=md5, already_exists=True, finished=True)
 
         with open(filename, 'wb') as f:
             f.write(r.content)
 
-        return Result(hash=md5)
+        return Result(hash=md5, finished=True)

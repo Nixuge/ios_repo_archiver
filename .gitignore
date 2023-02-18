@@ -1,3 +1,4 @@
 *.pyc
 debs/*
 tmp/
+test.db

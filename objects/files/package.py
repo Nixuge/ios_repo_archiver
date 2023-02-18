@@ -1,4 +1,4 @@
-from objects.files.File import File
+from objects.files.file import File
 
 #TODO: save Depiction & SileoDepiction & Icon & Header
 

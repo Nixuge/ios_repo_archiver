@@ -1,4 +1,4 @@
-from objects.files.File import File
+from objects.files.file import File
 
 class Release(File):
     known_keys = [
