@@ -10,7 +10,7 @@ class Package(File):
         "section",     
         "architecture",
         "depends",
-        "installed-size",
+        "installedsize",
         "author",
         "maintainer",
         "description",
@@ -30,11 +30,13 @@ class Package(File):
         "support",
         "breaks",
         "provides",
-        "pre-depends",
+        "predepends",
     ]
 
     fix_keys = {
-        "conflict": "conflicts"
+        "conflict": "conflicts",
+        "pre-depends": "predepends",
+        "installed-size": "installedsize"
     }
 
     hashes: dict

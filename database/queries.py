@@ -7,11 +7,11 @@
 # -> saved as hashes (md5s), only saved in file form directly
 # (party to avoid the db itself to grow too much w uninteresting things)
 
-class QUERIES:
+class Queries:
     @staticmethod
     def get_create_repo_table_query(name: str) -> str:
         return f"""CREATE TABLE IF NOT EXISTS {name} (
-                    package VARCHAR(255),
+                    package VARCHAR(255) NOT NULL,
                     name VARCHAR(255),
                     version VARCHAR(255),
 
@@ -27,17 +27,12 @@ class QUERIES:
                     breaks VARCHAR(2048),
                     conflicts VARCHAR(2048),
 
-                    support VARCHAR(1024),
-
-                    installed-size INT,
                     size INT,
+                    installedsize INT,
 
                     author VARCHAR(1024),
                     maintainer VARCHAR(1024),
-
-                    md5sum VARCHAR(32),
-                    sha256 VARCHAR(64),
-                    sha512 VARCHAR(128),
+                    support VARCHAR(1024),
 
                     description TEXT,
 
@@ -49,9 +44,20 @@ class QUERIES:
 
                     additionaldata TEXT,
                     
-                    PRIMARY KEY (package)
+                    md5sum VARCHAR(32) NOT NULL,
+                    sha256 VARCHAR(64),
+
+                    PRIMARY KEY (md5sum)
                     );"""
     
     @staticmethod
-    def get_insert_query(name: str) -> str:
-        return f"""INSERT INTO {name} VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"""
+    def get_insert_query(table: str) -> str:
+        return f"""INSERT INTO {table} VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"""
+    
+    @staticmethod
+    def get_where_contains_key(table: str, column: str, value: str):
+        return f"""SELECT * FROM {table} WHERE {column}=\"{value}\""""
+    
+    @staticmethod
+    def get_where_contains_md5(table: str, hash: str):
+        return Queries.get_where_contains_key(table, "md5sum", hash)

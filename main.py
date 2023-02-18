@@ -1,4 +1,5 @@
 import os
+from database.utils import Utils
 from utils.Downloader import Downloader
 from objects.Repo import Repo
 from objects.files.Package import Package
@@ -6,7 +7,7 @@ from objects.files.Release import Release
 
 import sqlite3
 
-from database.queries import QUERIES
+from database.queries import Queries
 
 # TODO: add tests
 
@@ -17,14 +18,24 @@ from database.queries import QUERIES
 
 repo = Repo("Chariz", "https://repo.chariz.com/")
 
+connection = sqlite3.connect("test.db")
+cursor = connection.cursor()
+cursor.execute(Queries.get_create_repo_table_query(repo.name))
 
 for thing in repo.packages:
     #TODO: CHECK FOR ENTRY IN DB BEFORE DOWNLOADING
-    ok = sqlite3.connect("owo3.db")
-    cursor = ok.cursor()
+    
+    if Utils.contains_md5(repo.name, thing.hashes["md5sum"], cursor):
+        print("md5 already present in that repo.")
+        continue
 
-    # args_order = ("package")
+    final_args = Utils.build_args(thing)
 
+    cursor.execute(Queries.get_insert_query(repo.name), final_args)
+
+print("all done")
+connection.commit()
+print("sql done")
 
     # print(thing.data["Package"])
     # result = Downloader(repo.url, thing.data["Filename"], thing.hashes).download()

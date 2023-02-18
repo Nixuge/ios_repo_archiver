@@ -16,7 +16,7 @@ class Result:
     status_code: str = 200
     hash_check: bool = True
     already_exists: bool = False
-    filename: str | None = None
+    hash: str | None = None
 
 
 class Downloader:
@@ -92,7 +92,7 @@ class Downloader:
             return Result(hash_check=False)
 
         if os.path.isfile(full_path):
-            return Result(already_exists=True, filename=full_path)
+            return Result(already_exists=True, hash=full_path)
 
 
         folder = f"debs/{md5[0]}"
@@ -101,4 +101,4 @@ class Downloader:
         
         shutil.move(random_filename, full_path)
 
-        return Result(filename=full_path)
+        return Result(hash=md5)

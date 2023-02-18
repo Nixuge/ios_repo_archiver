@@ -20,9 +20,10 @@ class File:
         pass
     
     def _get_fixed_val(self, val: str) -> str:
-        if val.lower() in self.fix_keys:
-            return self.fix_keys[val]
-        return val.lower()
+        low = val.lower()
+        if low in self.fix_keys:
+            return self.fix_keys[low]
+        return low
 
     @staticmethod
     def _get_key_data(line: str) -> tuple[str, str]:
