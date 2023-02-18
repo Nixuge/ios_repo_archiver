@@ -21,9 +21,10 @@ class PackagesManager:
 
 
     @staticmethod
-    def get_packages(base_url: str, release: Release) -> list[Package]:
+    def get_packages(base_url: str, release: Release) -> list[Package] | None:
         if "Packages" in release.files:
             return PackagesManager._get_packages_from_file(download_str(base_url + "Packages"))
         
+        return None
         # TODO: add support to remaining file extensions
         # see top of file

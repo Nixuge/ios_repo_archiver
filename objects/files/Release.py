@@ -2,18 +2,18 @@ from objects.files.File import File
 
 class Release(File):
     known_keys = [
-        "Origin",
-        "Label",
-        "Suite",
-        "Version",
-        "Codename",
-        "Architectures",
-        "Components",
-        "Description",
-        "Date",
-        "MD5Sum",
-        "SHA512",
-        "SHA256"
+        "origin",
+        "label",
+        "suite",
+        "version",
+        "codename",
+        "architectures",
+        "components",
+        "description",
+        "date",
+        "md5sum",
+        "sha512",
+        "sha256"
     ]
 
     files: dict
@@ -45,19 +45,20 @@ class Release(File):
                 if self.is_in(self.last_key, self.known_hashes):
                     self._add_hash(line)
                 elif self.known(self.last_key):
-                    self.data[known_key] += line[1:]
+                    self.data[self.last_key] += line[1:]
                 else:
-                    self.additional_data[known_key] += line[1:]
+                    self.additional_data[self.last_key] += line[1:]
                 continue
             
             key, value = self._get_key_data(line)
 
+            key = self._get_fixed_val(key)
+
             # Save key to dict (if key is a known key)
-            known_key = self.known(key)
-            if known_key:
-                self.last_key = known_key
+            if self.known(key):
+                self.last_key = key
                 if not self.is_in(key, self.known_hashes):
-                    self.data[known_key] = value
+                    self.data[key] = value
                 continue
 
             self.additional_data[key] = value

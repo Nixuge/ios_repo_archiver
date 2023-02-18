@@ -11,18 +11,18 @@ class File:
     fix_keys = {}
 
     known_hashes = [
-        "MD5Sum",
-        "SHA512",
-        "SHA256"
+        "md5sum",
+        "sha512",
+        "sha256"
     ]
 
-    def __init__(file: str):
+    def __init__(self, file: str):
         pass
     
     def _get_fixed_val(self, val: str) -> str:
-        if val in self.fix_keys:
+        if val.lower() in self.fix_keys:
             return self.fix_keys[val]
-        return val
+        return val.lower()
 
     @staticmethod
     def _get_key_data(line: str) -> tuple[str, str]:
@@ -35,12 +35,11 @@ class File:
         
         return key, value
 
+    # remainings from an old system
     @staticmethod
-    def is_in(key: str, values: list[str]) -> str | None:
+    def is_in(key: str, values: list[str]) -> bool:
         key = key.lower()
-        for value in values:
-            if value.lower() == key:
-                return value
+        return key.lower() in values
         
-    def known(self, key: str) -> str | None:
+    def known(self, key: str) -> bool:
         return self.is_in(key, self.known_keys)
