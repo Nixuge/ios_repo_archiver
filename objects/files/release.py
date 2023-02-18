@@ -13,6 +13,10 @@ class Release(File):
         "date"
     ]
 
+    fix_keys = {
+        "architecture": "architectures"
+    }
+
     files: dict
 
     def _add_hash(self, line: str) -> None:

@@ -17,22 +17,16 @@ from utils.file import Folder
 
 Folder.create_all()
 
-repo = Repo("alfhaily", "https://apt.alfhaily.me/")
-
 connection = sqlite3.connect("test.db")
 cursor = connection.cursor()
-cursor.execute(Queries.get_create_repo_table_query(repo.name))
+sqlinfo = SQLInfo(connection, cursor)
 
-sqldata = SQLInfo(connection, cursor)
+repo = Repo("delta", "https://getdelta.co/", sqlinfo)
 
-for thing in repo.packages:
-    if Utils.contains_md5(repo.name, thing.hashes["md5sum"], cursor):
-        print("md5 already present in that repo.")
-        continue
-    
-    pkgdl = PackageDownload(repo, thing, sqldata)
+repo.remove_existing_packages()
+
+for pkg in repo.packages:
+    pkgdl = PackageDownload(repo, pkg, sqlinfo)
     print("===Starting DL===")
     pkgdl.download_package_content_db()
     print("===Done with DL===")
-
-

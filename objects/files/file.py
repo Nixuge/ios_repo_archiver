@@ -8,7 +8,7 @@ class File:
     last_key: str
     data: dict
     additional_data: dict
-    fix_keys = {}
+    fix_keys: dict[str, str] = {}
 
     known_hashes = [
         "md5sum",

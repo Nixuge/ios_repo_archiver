@@ -4,6 +4,7 @@
 # .lzma
 # .xz
 # .zst
+# .gz (getdelta.co has only this one)
 
 from objects.files.package import Package
 from objects.files.release import Release
