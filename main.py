@@ -8,7 +8,7 @@ from objects.files.Release import Release
 import sqlite3
 
 from database.queries import Queries
-from utils.vars import DLF
+from utils.file import Folder
 
 # TODO: add tests
 
@@ -18,7 +18,8 @@ from utils.vars import DLF
 # they'll all just be saved in JSON and loaded into ram
 
 # make all folders
-DLF().create__()
+# actually nvm lol
+# Folder().create__()
 
 input()
 

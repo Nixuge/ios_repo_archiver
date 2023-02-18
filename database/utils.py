@@ -5,31 +5,29 @@ from objects.files.Package import Package
 
 class Utils:
     @staticmethod
-    def get_args_order() -> tuple:
+    def get_dict_args_order() -> tuple:
         return ("package", "name", "version", 
                 "section", "architecture", "tag",
                 "depends", "provides", "predepends", "replaces", "suggests", "breaks", "conflicts",
                 "size", "installedsize",
                 "author", "maintainer", "support",
-                "description",
-                "depiction", "sileodepiction", # saved as hashes (md5)
-                "icon", "header") # saved as hashes (md5)
+                "description") 
 
-        #TODO: 
-        #remove depiction, sileodepiction,
-        #icon, header
-        #& download them & save MD5
+        # + ("depiction", "sileodepiction", "icon", "header")
+        # saved as hashes (md5) after
 
-        # ("additionaldata", "md5sum", "sha256", "sha512")
+        # + ("additionaldata", "md5sum", "sha256", "sha512")
         # not here as processed differently
 
     @staticmethod
     def build_args(package: Package) -> list[str]:
         final_args: list[str] = []
         # All normal elements
-        for arg in Utils.get_args_order():
+        for arg in Utils.get_dict_args_order():
             final_args.append(package.data.get(arg, None))
         
+        # TODO: ADD ELEMENTS ("depiction", "sileodepiction", "icon", "header")
+
         # Add additional data
         if package.additional_data == None or len(package.additional_data) == 0:
             final_args.append(None) # type: ignore 

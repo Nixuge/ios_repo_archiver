@@ -3,7 +3,7 @@
 import random
 import string
 
-from utils.vars import DLF
+from utils.file import Folder
 
-def random_string(prefix: str = DLF.temp, letter_count: int = 15) -> str:
+def random_string(prefix: str = Folder.temp, letter_count: int = 15) -> str:
     return prefix + ''.join(random.choice(string.ascii_lowercase) for _ in range(letter_count))

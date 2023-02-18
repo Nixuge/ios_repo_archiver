@@ -2,31 +2,14 @@
 # Handle errors (retrying, seeing if paid package)
 # Allow device, unique id, firmware configuration
 
-from dataclasses import dataclass
 import hashlib
 import os
 import requests
 import shutil
+from utils.downloaders.result import Result
 
 from utils.stringutils import random_string
 
-
-@dataclass
-class Result:
-    status_code: int
-    hash_check: bool
-    already_exists: bool
-    hash: str | None
-
-    def __init__(self, status_code: int = 200, hash_check: bool = True, 
-                 already_exists: bool = False, hash: str | None = None,
-                 temp_filename: str | None = None):
-        self.status_code = status_code
-        self.hash_check = hash_check
-        self.already_exists = already_exists
-        self.hash = hash
-        if temp_filename:
-            os.system(f"rm {temp_filename}")
         
 
 class Downloader:
@@ -109,6 +92,7 @@ class Downloader:
         if not os.path.exists(folder):
             os.makedirs(folder)
         
+        
         shutil.move(temp_filename, full_path)
 
-        return Result(hash=md5, temp_filename=temp_filename)
+        return Result(hash=md5)
