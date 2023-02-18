@@ -1,4 +1,4 @@
-from files.File import File
+from objects.files.File import File
 
 class Release(File):
     known_keys = [
@@ -32,6 +32,7 @@ class Release(File):
     
     def __init__(self, file: str):
         self.data = {}
+        self.additional_data = {}
         self.files = {}
 
         for line in file.split("\n"):
@@ -43,19 +44,21 @@ class Release(File):
             if line[0] == ' ':
                 if self.is_in(self.last_key, self.known_hashes):
                     self._add_hash(line)
-                else:
+                elif self.known(self.last_key):
                     self.data[known_key] += line[1:]
+                else:
+                    self.additional_data[known_key] += line[1:]
                 continue
             
             key, value = self._get_key_data(line)
 
             # Save key to dict (if key is a known key)
-            known_key = self.is_in(key, self.known_keys)
+            known_key = self.known(key)
             if known_key:
                 self.last_key = known_key
                 if not self.is_in(key, self.known_hashes):
                     self.data[known_key] = value
                 continue
 
-            
+            self.additional_data[key] = value
             print(f"UNKNOWN KEY FOR LINE: {line}")

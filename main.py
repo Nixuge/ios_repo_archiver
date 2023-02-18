@@ -1,9 +1,15 @@
 import os
-from managers.Downloader import Downloader
-from managers.Repo import Repo
-from files.Package import Package
-from files.Release import Release
+from utils.Downloader import Downloader
+from objects.Repo import Repo
+from objects.files.Package import Package
+from objects.files.Release import Release
 
+# TODO: add tests
+
+# NOTE:
+# since repo release files are pretty lightweight
+# there's no need to bother with SQL
+# they'll all just be saved in JSON and loaded into ram
 
 repo = Repo("Chariz", "https://repo.chariz.com/")
 
@@ -13,11 +19,12 @@ for thing in repo.packages:
     
     print(thing.data["Package"])
     result = Downloader(repo.url, thing.data["Filename"], thing.hashes).download()
-    os.system("rm tmp/*")
+    os.system("rm z_tmp/*")
 
     if result.status_code != 200:
         print("Something wrong !")
         #TODO: Add to diff table "paid_tweaks" if 401
+        #or add "paid" attribute
         print(result.status_code)
         input()
     

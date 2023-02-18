@@ -66,7 +66,7 @@ class Downloader:
         #todo: maybe add int(time) at start & end & grab size response header
         # to make mb/s average?
 
-        random_filename = "tmp/" + ''.join(random.choice(string.ascii_lowercase) for _ in range(15))
+        random_filename = "z_tmp/" + ''.join(random.choice(string.ascii_lowercase) for _ in range(15))
         md5 = hashlib.md5()
 
         with requests.get(self.url, headers=self.headers, stream=True) as r:

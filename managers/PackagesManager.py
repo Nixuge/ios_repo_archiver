@@ -5,8 +5,8 @@
 # .xz
 # .zst
 
-from files.Package import Package
-from files.Release import Release
+from objects.files.Package import Package
+from objects.files.Release import Release
 from downloadUtils import download_str
 
 class PackagesManager:

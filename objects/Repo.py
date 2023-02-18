@@ -1,6 +1,6 @@
-from managers.Packages import PackagesManager
-from files.Release import Release
-from files.Package import Package
+from managers.PackagesManager import PackagesManager
+from objects.files.Release import Release
+from objects.files.Package import Package
 
 from downloadUtils import download_str
 
