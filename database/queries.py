@@ -50,12 +50,14 @@ class Queries:
                     md5sum VARCHAR(32) NOT NULL,
                     sha256 VARCHAR(64),
 
+                    paid BOOLEAN,
+
                     PRIMARY KEY (md5sum)
                     );"""
     
     @staticmethod
     def get_insert_query(table: str) -> str:
-        return f"""INSERT INTO {table} VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"""
+        return f"""INSERT INTO {table} VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"""
     
     @staticmethod
     def get_where_contains_key(table: str, column: str, value: str):

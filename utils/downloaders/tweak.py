@@ -90,7 +90,6 @@ class Downloader:
             return Result(hash=full_path, temp_filename=temp_filename, already_exists=True, finished=True)
 
 
-        folder = f"debs/{md5[0]}"
         if not os.path.exists(folder):
             os.makedirs(folder)
         

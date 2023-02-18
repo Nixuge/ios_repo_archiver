@@ -15,8 +15,9 @@ class PackagesManager:
         packages_list = []
         packages_raw = packages_file.split("\n\n")
         for pkg in packages_raw:
-            owo = Package(pkg)
-            packages_list.append(owo)
+            pkg = Package(pkg)
+            if pkg.data != {}:
+                packages_list.append(pkg)
         return packages_list
 
 

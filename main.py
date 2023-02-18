@@ -18,7 +18,7 @@ from utils.file import Folder
 # there's no need to bother with SQL
 # they'll all just be saved in JSON and loaded into ram
 
-Folder().create()
+Folder.create_all()
 
 repo = Repo("havoc", "https://havoc.app/")
 
@@ -34,34 +34,8 @@ for thing in repo.packages:
         continue
     
     pkgdl = PackageDownload(repo, thing, sqldata)
+    print("===Starting DL===")
     pkgdl.download_all_add_db()
-    print("done 1")
+    print("===Done with DL===")
 
-    input()
 
-    # final_args = Utils.build_args(thing)
-
-    # cursor.execute(Queries.get_insert_query(repo.name), final_args)
-    # connection.commit()
-
-print("all done")
-
-print("sql done")
-
-# print(thing.data["Package"])
-# result = Downloader(repo.url, thing.data["Filename"], thing.hashes).download()
-
-# if result.status_code != 200:
-#     print("Something wrong !")
-#     #TODO: Add to diff table "paid_tweaks" if 401
-#     #or add "paid" attribute
-#     print(result.status_code)
-#     input()
-
-# elif result.already_exists:
-#     print("file already there !")
-#     # input()
-
-# elif not result.hash_check:
-#     print("invalid hash !")
-#     input()
