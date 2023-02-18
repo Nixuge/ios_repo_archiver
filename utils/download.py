@@ -5,6 +5,3 @@ def download_bytes(url: str) -> bytes:
 
 def download_str(url: str) -> str:
     return download_bytes(url).decode()
-
-def download_file(url: str, file: str) -> None:
-    download_bytes()

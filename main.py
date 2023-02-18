@@ -1,6 +1,6 @@
 import os
 from database.utils import Utils
-from utils.Downloader import Downloader
+from utils.downloaders.tweak import Downloader
 from objects.Repo import Repo
 from objects.files.Package import Package
 from objects.files.Release import Release
@@ -8,6 +8,7 @@ from objects.files.Release import Release
 import sqlite3
 
 from database.queries import Queries
+from utils.vars import DLF
 
 # TODO: add tests
 
@@ -15,6 +16,11 @@ from database.queries import Queries
 # since repo release files are pretty lightweight
 # there's no need to bother with SQL
 # they'll all just be saved in JSON and loaded into ram
+
+# make all folders
+DLF().create__()
+
+input()
 
 repo = Repo("Chariz", "https://repo.chariz.com/")
 
@@ -39,7 +45,6 @@ print("sql done")
 
     # print(thing.data["Package"])
     # result = Downloader(repo.url, thing.data["Filename"], thing.hashes).download()
-    # os.system("rm z_tmp/*")
 
     # if result.status_code != 200:
     #     print("Something wrong !")

@@ -7,7 +7,7 @@
 
 from objects.files.Package import Package
 from objects.files.Release import Release
-from downloadUtils import download_str
+from utils.download import download_str
 
 class PackagesManager:
     @staticmethod
@@ -21,10 +21,12 @@ class PackagesManager:
 
 
     @staticmethod
-    def get_packages(base_url: str, release: Release) -> list[Package] | None:
+    def get_packages(base_url: str, release: Release) -> list[Package]:
         if "Packages" in release.files:
             return PackagesManager._get_packages_from_file(download_str(base_url + "Packages"))
         
-        return None
+        # just bc python type isnt happy
+        #should be removed 
+        return [Package("owo")]
         # TODO: add support to remaining file extensions
         # see top of file

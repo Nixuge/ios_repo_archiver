@@ -15,6 +15,11 @@ class Utils:
                 "depiction", "sileodepiction", # saved as hashes (md5)
                 "icon", "header") # saved as hashes (md5)
 
+        #TODO: 
+        #remove depiction, sileodepiction,
+        #icon, header
+        #& download them & save MD5
+
         # ("additionaldata", "md5sum", "sha256", "sha512")
         # not here as processed differently
 
@@ -27,7 +32,7 @@ class Utils:
         
         # Add additional data
         if package.additional_data == None or len(package.additional_data) == 0:
-            final_args.append(None)
+            final_args.append(None) # type: ignore 
         else:
             final_args.append(str(package.additional_data))
         

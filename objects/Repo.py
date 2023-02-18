@@ -1,8 +1,8 @@
-from managers.PackagesManager import PackagesManager
+from managers.packages import PackagesManager
 from objects.files.Release import Release
 from objects.files.Package import Package
 
-from downloadUtils import download_str
+from utils.download import download_str
 
 class Repo:
     name: str
