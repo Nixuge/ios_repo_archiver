@@ -8,21 +8,26 @@ from utils.file import Folder
 
 # TODO: add tests
 
+# TODO: save missing files in a json for retry later
+# TODO: sometimes Headers is in moderndepiction, try to grab it there
+
 # NOTE:
 # since repo release files are pretty lightweight
 # there's no need to bother with SQL
 # they'll all just be saved in JSON and loaded into ram
 
+# Make all folders
 Folder.create_all()
 
+# Init DB
 connection = sqlite3.connect("test.db")
-cursor = connection.cursor()
-sqlinfo = SQLInfo(connection, cursor)
+sqlinfo = SQLInfo(connection, connection.cursor())
 
+# Init repo
 repo = Repo("apptapp", "https://apptapp.me/repo/", sqlinfo)
-
 repo.remove_existing_packages()
 
+# Download all
 for pkg in repo.packages:
     pkgdl = PackageDownload(repo, pkg, sqlinfo)
     print("===Starting DL===")
