@@ -41,6 +41,7 @@ class Package(File):
     )
 
     fix_keys = {
+        "recommended": "suggests",
         "recommends": "suggests",
         "sileodepiction": "moderndepiction",
         "tags": "tag",

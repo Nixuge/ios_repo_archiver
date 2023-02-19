@@ -26,7 +26,7 @@ class Repo:
         self.name = repo_name
         self.url = repo_url
         self.release = Release(download_str(repo_url + "Release"))
-        self.packages = PackagesManager.get_packages(repo_url, self.release)
+        self.packages = PackagesManager(repo_url, self.release).get_packages()
 
         sqlinfo.cursor.execute(Queries.get_create_repo_table_query(repo_name))
         #TODO: use subpath
