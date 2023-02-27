@@ -59,8 +59,10 @@ class PackagesManager:
         if not found_file:
             return None
 
+        # print(found_file)
+
         print(f"Using found release file: {found_file}")
-        return self.supported_packages[found_file](data).decode()
+        return self.supported_packages[found_file](data).decode(errors="ignore")
 
     def get_packages(self) -> list[Package]:
         found_file = self._get_package_filename()

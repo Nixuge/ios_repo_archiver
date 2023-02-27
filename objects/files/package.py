@@ -60,15 +60,29 @@ class Package(File):
             # avoid empty lines
             if line == '': continue
 
+
             # handle multi-lines keys
             # shouldn't be hashes in there so not handled
-            if line[0] == ' ':
+            # if line[0] == ' ' (OLD LINE)
+
+            # Note: HYI's Packages file is pretty good to test this
+            # as quality control doesn't seem to be something they really think of
+            # and their packages file is huge so it's quite easy to catch edge-cases
+            isKeyPresent = False
+            if ' ' in line and ':' in line:
+                isKeyPresent = line.index(' ') > line.index(':')
+            elif line[-1] == ':':
+                isKeyPresent = True
+
+            # print(isKeyPresent, line)
+
+            if not isKeyPresent:
                 if self.known(self.last_key):
                     self.data[self.last_key] += "\n" + line[1:]
                 else:
                     self.additional_data[self.last_key] += "\n" + line[1:]
                 continue
-            
+
             # else see if key present in known keys
             key, value = self._get_key_data(line)
 

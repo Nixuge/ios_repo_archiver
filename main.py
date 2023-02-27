@@ -12,6 +12,10 @@ from utils.file import Folder
 # TODO: add an option to re check paid packages
 # TODO: support loading local repo folder
 # TODO: note if other media download failed
+# TODO: check httpx or smth lib for async requests
+
+# TODO: seems to be using a lot of outbound data, to check?
+# (or ask synology to fix their thing)
 
 # TODO: save missing files in a json for retry later
 # TODO: sometimes Headers is in moderndepiction, try to grab it there
@@ -21,6 +25,11 @@ from utils.file import Folder
 # since repo release files are pretty lightweight
 # there's no need to bother with SQL
 # they'll all just be saved in JSON and loaded into ram
+
+# NOTE:
+# HYI's Packages file has some UTF-8 encoding errors
+# See package "IAPFree Toggle" (0x96 bytes in author field)
+
 
 # Make all folders
 Folder.create_all()
@@ -40,7 +49,8 @@ repos: list[RepoMeta] = [
     RepoMeta("Delta", "https://getdelta.co", "getdelta_co"),
     RepoMeta("Alfhaily APT", "https://apt.alfhaily.me", "apt_alfhaily_me"),
     RepoMeta("alexia's repo", "https://repo.cadoth.net", "repo_cadoth_net"),
-    RepoMeta("AnthoPak's Repo", "https://repo.anthopak.dev", "repo_anthopak_dev")
+    RepoMeta("AnthoPak's Repo", "https://repo.anthopak.dev", "repo_anthopak_dev"),
+    RepoMeta("HackYourIphone", "https://repo.hackyouriphone.org", "repo_hackyouriphone_org")
 ]
 
 # Kinda dirty repo picker for now
