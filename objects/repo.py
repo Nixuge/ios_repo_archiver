@@ -25,8 +25,11 @@ class Repo:
         self.sqlinfo = sqlinfo
         self.name = repo_name
         self.url = repo_url
-        self.release = Release(download_str(repo_url + "Release"))
-        self.packages = PackagesManager(repo_url, self.release).get_packages()
+        if self.url[-1] != '/':
+            self.url += '/'
+        #TODO: add if not starting w http/https or smth
+        self.release = Release(download_str(self.url + "Release"))
+        self.packages = PackagesManager(self.url, self.release).get_packages()
 
         sqlinfo.cursor.execute(Queries.get_create_repo_table_query(repo_name))
         #TODO: use subpath
