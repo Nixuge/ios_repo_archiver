@@ -6,7 +6,7 @@ class Config:
     save_additional_data: bool = True # if set to false, doesn't save depiction etc
     ignore_errors: bool = True # if set to false, crashes on deb save error
     recheck_paid_packages: bool = False # TODO: unimplemented
-    print_progress: bool = True
+    print_progress: bool = True #not completely implemented
     print_paid_packages: bool = True # TODO: unimplemented
     print_deb_fails: bool = True  # TODO: unimplemented
     print_additional_fails: bool = True #TODO: unimplemented

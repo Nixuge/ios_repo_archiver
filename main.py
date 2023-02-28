@@ -17,6 +17,7 @@ from utils.vars.file import Folder
 # TODO: note if other media download failed
 # TODO: check httpx or smth lib for async requests
 
+# TODO: (eventually) add way to see data from the db
 
 # TODO: save missing files in a json for retry later
 # TODO: sometimes Headers is in moderndepiction, try to grab it there
