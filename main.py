@@ -1,9 +1,11 @@
+from config.config import Config
 from utils.packagedownload import PackageDownload
 from objects.repometa import RepoMeta
 from objects.sqlinfo import SQLInfo
 from objects.repo import Repo
 
 import sqlite3
+from utils.prints import print_same_line
 
 from utils.vars.file import Folder
 
@@ -40,24 +42,25 @@ sqlinfo = SQLInfo(connection, connection.cursor())
 # TODO: read this from a json
 
 repos: list[RepoMeta] = [
-    RepoMeta("Havoc", "https://havoc.app/", "havoc_app"),
-    RepoMeta("AppTapp Repository", "https://apptapp.me/repo/", "apptapp_me__repo"),
-    RepoMeta("19card's Repo", "https://19card.github.io/repo/", "_19card_github_io__repo"),
-    RepoMeta("PoomSmart's Repo", "https://poomsmart.github.io/repo/", "poomsmart_github_io__repo"),
-    RepoMeta("Delta", "https://getdelta.co", "getdelta_co"),
-    RepoMeta("Alfhaily APT", "https://apt.alfhaily.me", "apt_alfhaily_me"),
-    RepoMeta("alexia's repo", "https://repo.cadoth.net", "repo_cadoth_net"),
-    RepoMeta("AnthoPak's Repo", "https://repo.anthopak.dev", "repo_anthopak_dev"),
+    RepoMeta("Havoc", "https://havoc.app/"),
+    RepoMeta("AppTapp Repository", "https://apptapp.me/repo/"),
+    RepoMeta("19card's Repo", "https://19card.github.io/repo/",),
+    RepoMeta("PoomSmart's Repo", "https://poomsmart.github.io/repo/"),
+    RepoMeta("Delta", "https://getdelta.co"),
+    RepoMeta("Alfhaily APT", "https://apt.alfhaily.me"),
+    RepoMeta("alexia's repo", "https://repo.cadoth.net"),
+    RepoMeta("AnthoPak's Repo", "https://repo.anthopak.dev"),
     # Pirate repo but see objects/files/package.py#68
-    RepoMeta("HackYourIphone", "https://repo.hackyouriphone.org", "repo_hackyouriphone_org") 
+    RepoMeta("HackYourIphone", "https://repo.hackyouriphone.org") 
 ]
+
 
 # Kinda dirty repo picker for now
 names = [repo.full_name for repo in repos]
 print(f"Repos available: {names}")
 choosen_repo = input("Choose your repo of choice: ")
 
-choosen_repo_meta: RepoMeta = RepoMeta("", "", "")
+choosen_repo_meta: RepoMeta = RepoMeta("", "invalid.fr")
 for repometa in repos:
     if repometa.full_name == choosen_repo.strip():
         choosen_repo_meta = repometa
@@ -69,14 +72,21 @@ if choosen_repo_meta.full_name == "":
 
 # Init repo
 repo = Repo(choosen_repo_meta.sql_name, choosen_repo_meta.url, sqlinfo)
+
+if choosen_repo_meta.config.print_progress:
+    print(f"Full packages: {len(repo.packages)}")
+
 repo.remove_existing_packages()
 
-# Download all
-for pkg in repo.packages:
-    pkgdl = PackageDownload(repo, pkg, sqlinfo)
-    print("===Starting DL===")
-    print(f"Downloading {pkg.data['package']}")
-    pkgdl.download_package_content_db()
-    print("===Done with DL===")
+if choosen_repo_meta.config.print_progress:
+    print(f"Stripped packages: {len(repo.packages)}")
 
-print("Done downloading")
+# Download all
+for index, pkg in enumerate(repo.packages):
+    pkgdl = PackageDownload(repo, pkg, sqlinfo)
+    if choosen_repo_meta.config.print_progress:
+        print_same_line(f"Downloading package {index+1}/{len(repo.packages)} ({pkg.data['package']})")
+    pkgdl.download_package_content_db()
+
+if choosen_repo_meta.config.print_progress:
+    print("Done downloading")
