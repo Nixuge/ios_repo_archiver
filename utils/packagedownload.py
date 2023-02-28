@@ -56,5 +56,5 @@ class PackageDownload:
 
         final_args = Utils.build_args(self.package, other_keys, self.paid)
 
-        self.sql.cursor.execute(Queries.get_insert_query(self.repo.name), final_args)
+        self.sql.cursor.execute(Queries.get_insert_query(self.repo.table_name), final_args)
         self.sql.connection.commit()

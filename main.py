@@ -1,3 +1,6 @@
+#!/bin/python3
+
+from config.argparser import ArgsParser
 from config.config import Config
 from utils.packagedownload import PackageDownload
 from objects.repometa import RepoMeta
@@ -10,8 +13,6 @@ from utils.prints import print_same_line
 from utils.vars.file import Folder
 
 # TODO: add tests
-# TODO: add cmd line args
-# TODO: add an option to re check paid packages
 # TODO: support loading local repo folder
 # TODO: note if other media download failed
 # TODO: check httpx or smth lib for async requests
@@ -39,34 +40,47 @@ connection = sqlite3.connect("test.db")
 sqlinfo = SQLInfo(connection, connection.cursor())
 
 
-# TODO: read this from a json
+ArgsParser().get_repos()
 
+
+# repos: list[RepoMeta] = [
+#     RepoMeta("Havoc", "https://havoc.app/"),
+#     RepoMeta("AppTapp Repository", "https://apptapp.me/repo/"),
+#     RepoMeta("19card's Repo", "https://19card.github.io/repo/",),
+#     RepoMeta("PoomSmart's Repo", "https://poomsmart.github.io/repo/"),
+#     RepoMeta("Delta", "https://getdelta.co"),
+#     RepoMeta("Alfhaily APT", "https://apt.alfhaily.me"),
+#     RepoMeta("alexia's repo", "https://repo.cadoth.net"),
+#     RepoMeta("AnthoPak's Repo", "https://repo.anthopak.dev"),
+#     RepoMeta("HackYourIphone", "https://repo.hackyouriphone.org") 
+# ]
 repos: list[RepoMeta] = [
-    RepoMeta("Havoc", "https://havoc.app/"),
-    RepoMeta("AppTapp Repository", "https://apptapp.me/repo/"),
-    RepoMeta("19card's Repo", "https://19card.github.io/repo/",),
-    RepoMeta("PoomSmart's Repo", "https://poomsmart.github.io/repo/"),
-    RepoMeta("Delta", "https://getdelta.co"),
-    RepoMeta("Alfhaily APT", "https://apt.alfhaily.me"),
-    RepoMeta("alexia's repo", "https://repo.cadoth.net"),
-    RepoMeta("AnthoPak's Repo", "https://repo.anthopak.dev"),
+    RepoMeta("https://havoc.app/"),
+    RepoMeta("https://apptapp.me/repo/"),
+    RepoMeta("https://19card.github.io/repo/",),
+    RepoMeta("https://poomsmart.github.io/repo/"),
+    RepoMeta("https://getdelta.co"),
+    RepoMeta("https://apt.alfhaily.me"),
+    RepoMeta("https://repo.cadoth.net"),
+    RepoMeta("https://repo.anthopak.dev"),
     # Pirate repo but see objects/files/package.py#68
-    RepoMeta("HackYourIphone", "https://repo.hackyouriphone.org") 
+    RepoMeta("https://repo.hackyouriphone.org") 
 ]
 
 
+
 # Kinda dirty repo picker for now
-names = [repo.full_name for repo in repos]
+names = [repo.url for repo in repos]
 print(f"Repos available: {names}")
 choosen_repo = input("Choose your repo of choice: ")
 
-choosen_repo_meta: RepoMeta = RepoMeta("", "invalid.fr")
+choosen_repo_meta: RepoMeta = RepoMeta("invalid.fr")
 for repometa in repos:
-    if repometa.full_name == choosen_repo.strip():
+    if repometa.url == choosen_repo.strip():
         choosen_repo_meta = repometa
         break
 
-if choosen_repo_meta.full_name == "":
+if choosen_repo_meta.url == "invalid.fr":
     print("Select an available repo", 1 / 0)
 
 

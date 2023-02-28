@@ -5,13 +5,11 @@ ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 VALID_CHARS = NUMS + ALPHABET + '_'
 
 class RepoMeta:
-    full_name: str #TODO: get that using the Release file directly (if possible)
     url: str
     sql_name: str
     config: Config
     
-    def __init__(self, full_name: str, url: str, config: Config | None = None) -> None:
-        self.full_name = full_name
+    def __init__(self, url: str, config: Config | None = None) -> None:
         self.url = url
         self.sql_name = self._get_sql_name_from_url(url)
         if config == None:
