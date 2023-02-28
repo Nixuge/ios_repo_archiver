@@ -7,7 +7,7 @@ import os
 import requests
 import shutil
 from utils.downloaders.result import Result
-from utils.file import Folder, get_create_path
+from utils.vars.file import Folder, get_create_path
 
 from utils.stringutils import random_string
 

@@ -1,11 +1,11 @@
-from objects.packagedownload import PackageDownload
+from utils.packagedownload import PackageDownload
 from objects.repometa import RepoMeta
 from objects.sqlinfo import SQLInfo
 from objects.repo import Repo
 
 import sqlite3
 
-from utils.file import Folder
+from utils.vars.file import Folder
 
 # TODO: add tests
 # TODO: add cmd line args

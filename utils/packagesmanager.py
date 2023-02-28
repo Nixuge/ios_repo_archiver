@@ -3,7 +3,7 @@
 
 from objects.files.package import Package
 from objects.files.release import Release
-from utils.download import download_bytes
+from utils.downloaders.utils import download_bytes
 
 import gzip
 import bz2
@@ -41,11 +41,13 @@ class PackagesManager:
             if key in self.supported_packages.keys():
                 return key
 
+    # NOTE:
+    # Using errors="ignore" for the decode methods as some repos have issues (HYI 0x96 bytes, invalid UTF8)
     def _get_data(self, found_file: str | None) -> str | None:
         if found_file:
             print(f"Using packages file found in release: {found_file}")
             data, _ = download_bytes(self.base_url + found_file)
-            return self.supported_packages[found_file](data).decode()
+            return self.supported_packages[found_file](data).decode(errors="ignore")
 
         data: bytes = b''
         found_file = None

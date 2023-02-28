@@ -6,8 +6,8 @@ from objects.repo import Repo
 from objects.sqlinfo import SQLInfo
 from utils.downloaders.tweak import Downloader as TweakDL
 from utils.downloaders.simple import Downloader as SimpleDL
-from utils.file import Folder
-from utils.statuscodes import StatusCodes
+from utils.vars.file import Folder
+from utils.vars.statuscodes import StatusCodes
 
 class PackageDownload:
     repo: Repo
@@ -49,7 +49,7 @@ class PackageDownload:
                 self.paid = True
                 print("Got paid package !")
             else:
-                print("Got an error !")
+                print(f"Got an error ! {result.status_code}")
                 return None #TODO: return proper error
         
         other_keys = self._download_other_data()

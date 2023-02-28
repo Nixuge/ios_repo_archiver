@@ -1,11 +1,11 @@
 from database.queries import Queries
 from database.utils import Utils
-from managers.packages import PackagesManager
+from utils.packagesmanager import PackagesManager
 from objects.files.release import Release
 from objects.files.package import Package
 from objects.sqlinfo import SQLInfo
 
-from utils.download import download_str
+from utils.downloaders.utils import download_str
 
 class Repo:
     sqlinfo: SQLInfo

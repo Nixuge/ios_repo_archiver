@@ -8,7 +8,7 @@ import requests
 from utils.downloaders.result import Result
 import mimetypes
 
-from utils.file import get_create_path
+from utils.vars.file import get_create_path
 
 class Downloader:
     url: str | None
@@ -51,7 +51,15 @@ class Downloader:
         if not self.url:
             return Result(valid_url=False)
     
-        r = requests.get(self.url, headers=self.headers)
+        if not self.url.startswith("http://") and not self.url.startswith("https://"):
+            return Result(valid_url=False)
+
+        r: requests.Response
+        try:
+            r = requests.get(self.url, headers=self.headers)
+        except requests.exceptions.ConnectionError:
+            return Result(valid_url=False)
+        
         if r.status_code != 200:
             return Result(status_code=r.status_code)
 
