@@ -1,6 +1,7 @@
 #!/bin/python3
 
 import asyncio
+from asyncio import Task
 from config.argparser import ArgsParser
 from config.config import Config
 from database.queue import DbQueueInstance
@@ -99,6 +100,8 @@ async def main():
 
     await download_all_async(repo)
 
+    DbQueueInstance.should_stop = True
+
 def download_all_noasync(repo: Repo):
     for index, pkg in enumerate(repo.packages):
         pkgdl = PackageDownload(repo, pkg)
@@ -111,15 +114,15 @@ def download_all_noasync(repo: Repo):
     return
 
 
-async def download_all_async(repo: Repo):
+async def download_all_async(repo: Repo, task_limit: int = 5):
+    packages: list[PackageDownloadAsync] = []
+    tasks: list[Task]
     for index, pkg in enumerate(repo.packages):
-        pkgdl = PackageDownloadAsync(repo, pkg)
-        if choosen_repo_meta.config.print_progress:
-            print_same_line(f"Downloading package {index+1}/{len(repo.packages)} ({pkg.data['package']})")
-        await pkgdl.download_package_content_db()
+        packages.append(PackageDownloadAsync(repo, pkg))
+          
 
-    if choosen_repo_meta.config.print_progress:
-        print("Done downloading")
+
+    
     return
 
 if __name__ == "__main__":

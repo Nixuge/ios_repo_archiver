@@ -6,7 +6,6 @@ from objects.files.package import Package
 from objects.repo import Repo
 from utils.downloaders.simple.simple_async import SimpleDownloaderAsync
 from utils.downloaders.tweak._tweak_base import _TweakDownloaderBase as TweakDL
-from utils.downloaders.simple import Downloader as SimpleDL
 from utils.downloaders.tweak.tweak_async import TweakDownloaderAsync
 from utils.vars.file import Folder
 from utils.vars.statuscodes import StatusCodes

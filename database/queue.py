@@ -12,6 +12,7 @@ class DbQueue(Thread):
     important_instructions: list[str]
     connection: Connection
     cursor: Cursor
+    should_stop: bool = False
 
     def __init__(self, db_manager: DbInstance) -> None:
         super().__init__(None, None, "DbQueueThread") #see thread init (unneeded basically)
@@ -55,6 +56,9 @@ class DbQueue(Thread):
 
     def run(self) -> None:
         while True:
+            if self.should_stop:
+                break
+
             sleep(0.5)
 
             # perform create table queries BEFORE insert queries
