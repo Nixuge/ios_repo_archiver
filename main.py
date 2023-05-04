@@ -65,7 +65,8 @@ repos: list[RepoMeta] = [
     RepoMeta("https://repo.cadoth.net"),
     RepoMeta("https://repo.anthopak.dev"),
     # Pirate repo but see objects/files/package.py#68
-    RepoMeta("https://repo.hackyouriphone.org") 
+    RepoMeta("https://repo.hackyouriphone.org"),
+    RepoMeta("https://apt.torrekie.com/")
 ]
 
 

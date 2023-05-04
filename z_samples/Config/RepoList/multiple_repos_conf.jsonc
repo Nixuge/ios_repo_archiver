@@ -1,0 +1,11 @@
+{
+    "https://repo.hackyouriphone.org/": {
+        "save_additional_data": true,
+        "ignore_errors": true,
+        "recheck_paid_packages": false
+    },
+    "https://havoc.app": {
+        "print": "all"
+    },
+    "https://getdelta.co": null
+}

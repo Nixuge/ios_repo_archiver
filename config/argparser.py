@@ -1,5 +1,6 @@
 from argparse import ArgumentParser, Namespace
 from config.config import Config
+from config.jsonparser import ConfigLoader
 
 from objects.repometa import RepoMeta
 
@@ -12,7 +13,7 @@ class ArgsParser:
         parser = ArgumentParser(prog='IOS Repo Downloader')
         # Priority in order
         parser.add_argument('-dc', '--default-config')
-        parser.add_argument('-j', '--json') # is list using default config, if dict using specified config
+        parser.add_argument('-rl', '--repo-list') # is list using default config, if dict using specified config
         parser.add_argument('-r', '--repo')
         # 4 below may be overwritten by "default_config"
         parser.add_argument('-p', '--print', action='store_true', help="none, all, additional_fails, deb_fails, paid_packages, progress") #TODO: implement custom choice instead of bool like rn
@@ -45,14 +46,12 @@ class ArgsParser:
 
     def get_repos(self) -> list[RepoMeta] | None:
         args = self.args
-        config = self._gen_config()
+        config: Config = self._gen_config()
 
         if args.default_config:
-            #TODO: load config from there & overwrite above
-            # config = 
-            pass
+            config = ConfigLoader().from_file(args.default_config).parse()
         
-        if args.json:
+        if args.repo_list:
             #TODO: Load config multiple times for every file
             # if list apply default config, else apply whathever specified in dict
             return #return the loaded thingys here

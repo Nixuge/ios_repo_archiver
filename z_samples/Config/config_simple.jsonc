@@ -1,0 +1,7 @@
+{
+    "save_additional_data": true,
+    "ignore_errors": true,
+    "recheck_paid_packages": false,
+    "#line below can also just have the values 'all' or 'none'": null,
+    "print": "progress paid_packages deb_fails additional_fails"
+}
