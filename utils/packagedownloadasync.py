@@ -4,12 +4,14 @@ from database.queue import DbQueueInstance
 from database.utils import Utils
 from objects.files.package import Package
 from objects.repo import Repo
-from utils.downloaders.simple.simple import SimpleDownloader
-from utils.downloaders.tweak.tweak import TweakDownloader
+from utils.downloaders.simple.simple_async import SimpleDownloaderAsync
+from utils.downloaders.tweak._tweak_base import _TweakDownloaderBase as TweakDL
+from utils.downloaders.simple import Downloader as SimpleDL
+from utils.downloaders.tweak.tweak_async import TweakDownloaderAsync
 from utils.vars.file import Folder
 from utils.vars.statuscodes import StatusCodes
 
-class PackageDownload:
+class PackageDownloadAsync:
     repo: Repo
     package: Package
     paid: bool
@@ -19,7 +21,7 @@ class PackageDownload:
         self.package = package
         self.paid = False
     
-    def _download_other_data(self) -> dict[str, Any]:
+    async def _download_other_data(self) -> dict[str, Any]:
         other_data: dict[str, Any] = {}
         for key in ("depiction", "moderndepiction", "icon", "header"):
             if not key in self.package.data:
@@ -28,7 +30,7 @@ class PackageDownload:
         
             value = self.package.data[key]
 
-            result = SimpleDownloader(value).download(Folder.from_name(key))
+            result = await SimpleDownloaderAsync(value).download_async(Folder.from_name(key))
 
             if result.finished:
                 other_data[key] = result.hash
@@ -40,8 +42,8 @@ class PackageDownload:
             
         return other_data
 
-    def download_package_content_db(self):
-        result = TweakDownloader(self.repo.url, self.package.data["filename"], self.package.hashes).download()
+    async def download_package_content_db(self):
+        result = await TweakDownloaderAsync(self.repo.url, self.package.data["filename"], self.package.hashes).download_async()
         if not result.finished:
             if result.status_code in StatusCodes.paid:
                 self.paid = True
@@ -50,7 +52,7 @@ class PackageDownload:
                 print(f"Got an error ! {result.status_code}")
                 return None #TODO: return proper error
         
-        other_keys = self._download_other_data()
+        other_keys = await self._download_other_data()
 
         final_args = Utils.build_args(self.package, other_keys, self.paid)
 

@@ -3,12 +3,12 @@
 import asyncio
 from config.argparser import ArgsParser
 from config.config import Config
+from database.queue import DbQueueInstance
 from utils.packagedownload import PackageDownload
 from objects.repometa import RepoMeta
-from objects.sqlinfo import SQLInfo
 from objects.repo import Repo
+from utils.packagedownloadasync import PackageDownloadAsync
 
-import sqlite3
 from utils.prints import print_same_line
 
 from utils.vars.file import Folder
@@ -38,9 +38,7 @@ from utils.vars.file import Folder
 Folder.create_all()
 
 # Init DB
-connection = sqlite3.connect("test.db")
-sqlinfo = SQLInfo(connection, connection.cursor())
-
+DbQueueInstance.start()
 
 ArgsParser().get_repos()
 
@@ -89,7 +87,7 @@ if choosen_repo_meta.url == "invalid.fr":
 
 async def main():
     # Init repo
-    repo = Repo(choosen_repo_meta.sql_name, choosen_repo_meta.url, sqlinfo)
+    repo = Repo(choosen_repo_meta.sql_name, choosen_repo_meta.url)
 
     if choosen_repo_meta.config.print_progress:
         print(f"Full packages: {len(repo.packages)}")
@@ -99,17 +97,33 @@ async def main():
     if choosen_repo_meta.config.print_progress:
         print(f"Stripped packages: {len(repo.packages)}")
 
-    await download_all(repo)
+    await download_all_async(repo)
 
-async def download_all(repo: Repo):
+def download_all_noasync(repo: Repo):
     for index, pkg in enumerate(repo.packages):
-        pkgdl = PackageDownload(repo, pkg, sqlinfo)
+        pkgdl = PackageDownload(repo, pkg)
+        if choosen_repo_meta.config.print_progress:
+            print_same_line(f"Downloading package {index+1}/{len(repo.packages)} ({pkg.data['package']})")
+        pkgdl.download_package_content_db()
+
+    if choosen_repo_meta.config.print_progress:
+        print("Done downloading")
+    return
+
+
+async def download_all_async(repo: Repo):
+    for index, pkg in enumerate(repo.packages):
+        pkgdl = PackageDownloadAsync(repo, pkg)
         if choosen_repo_meta.config.print_progress:
             print_same_line(f"Downloading package {index+1}/{len(repo.packages)} ({pkg.data['package']})")
         await pkgdl.download_package_content_db()
 
     if choosen_repo_meta.config.print_progress:
         print("Done downloading")
+    return
 
 if __name__ == "__main__":
     asyncio.run(main())
+    # TODO: fade out the "sync" versions, as they're basically useless
+    # since you can just call and await all of the async ones
+    # and you'll get the same result
