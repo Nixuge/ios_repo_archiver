@@ -21,6 +21,9 @@ class SimpleDownloaderAsync(_SimpleDownloaderBase):
             r = await httpx.AsyncClient().get(self.url, headers=self.headers, follow_redirects=True)
         except httpx._exceptions.ConnectError:
             return Result(valid_url=False)
+        except httpx.InvalidURL:
+            print("Invalid url: " + self.url)
+            return Result(valid_url=False)
         
         if r.status_code != 200:
             return Result(status_code=r.status_code)

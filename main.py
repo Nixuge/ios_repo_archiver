@@ -140,7 +140,7 @@ async def download_all_async(repo: Repo, task_limit: int = 10):
 
         await asyncio.sleep(.2)
         if choosen_repo_meta.config.print_progress:
-            print(f"Downloaded/Remaining packages: {downloaded}/{len(packages)}, Remaining tasks: {len(running_tasks)}", end="\r")
+            print(f"Downloaded/Remaining packages: {downloaded}/{len(packages)}, Remaining tasks: {len(running_tasks)}      ", end="\r")
 
     print("== Done with batch ==")
 

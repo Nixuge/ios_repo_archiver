@@ -16,11 +16,15 @@ class TweakDownloaderAsync(_TweakDownloaderBase):
         temp_filename = random_string()
         md5 = hashlib.md5()
         async with httpx.AsyncClient() as client:
-            r = await client.get(self.url, headers=self.headers, follow_redirects=True)
-            stream = r.stream
+            try:
+                r = await client.get(self.url, headers=self.headers, follow_redirects=True)
+            except httpx.ConnectTimeout:
+                return Result(finished=False, status_code=9999)
             # r.raise_for_status()
             # we don't want to allow redirects or anything here, only 200s
             # redirect = usually paid package (see Chariz)
+            # EDIT: lmao well HYI now requires redirects. Thanks.
+            # TODO: CHECK IF THIS IS STILL OK!
             if r.status_code != 200:
                 return Result(status_code=r.status_code, hash_check=False, temp_filename=temp_filename)
 
