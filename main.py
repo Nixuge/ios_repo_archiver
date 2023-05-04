@@ -4,13 +4,13 @@ import asyncio
 from asyncio import Task
 from config.argparser import ArgsParser
 from config.config import Config
-from database.queue import DbQueueInstance
 from utils.packagedownload import PackageDownload
 from objects.repometa import RepoMeta
 from objects.repo import Repo
 from utils.packagedownloadasync import PackageDownloadAsync
 
 from utils.prints import print_same_line
+from utils.vars.db import DbVars
 
 from utils.vars.file import Folder
 
@@ -39,7 +39,7 @@ from utils.vars.file import Folder
 Folder.create_all()
 
 # Init DB
-DbQueueInstance.start()
+DbVars.Queue.start()
 
 ArgsParser().get_repos()
 
@@ -74,7 +74,8 @@ repos: list[RepoMeta] = [
 # Kinda dirty repo picker for now
 names = [repo.url for repo in repos]
 print(f"Repos available: {names}")
-choosen_repo = input("Choose your repo of choice: ")
+# choosen_repo = input("Choose your repo of choice: ")
+choosen_repo = "https://repo.hackyouriphone.org"
 
 choosen_repo_meta: RepoMeta = RepoMeta("invalid.fr")
 for repometa in repos:
@@ -100,7 +101,7 @@ async def main():
 
     await download_all_async(repo)
 
-    DbQueueInstance.should_stop = True
+    DbVars.Queue.should_stop = True
 
 def download_all_noasync(repo: Repo):
     for index, pkg in enumerate(repo.packages):
@@ -114,14 +115,37 @@ def download_all_noasync(repo: Repo):
     return
 
 
-async def download_all_async(repo: Repo, task_limit: int = 5):
+async def download_all_async(repo: Repo, task_limit: int = 10):
+    print(f"=====STARTING ASYNC REPO DOWNLOAD ({task_limit} tasks max)=====")
+    downloaded = 0
     packages: list[PackageDownloadAsync] = []
-    tasks: list[Task]
-    for index, pkg in enumerate(repo.packages):
+    running_tasks: list[Task] = []
+    for pkg in repo.packages:
         packages.append(PackageDownloadAsync(repo, pkg))
-          
 
+    while True:            
+        for pkgdl in packages:
+            if (len(running_tasks) > task_limit):
+                break
+            running_tasks.append(asyncio.create_task(pkgdl.download_package_content_db()))
+            packages.remove(pkgdl)
 
+        for task in running_tasks:
+            if task.done():
+                running_tasks.remove(task)
+                downloaded += 1
+
+        if len(running_tasks) == 0:
+            break
+
+        await asyncio.sleep(.2)
+        if choosen_repo_meta.config.print_progress:
+            print(f"Downloaded/Remaining packages: {downloaded}/{len(packages)}, Remaining tasks: {len(running_tasks)}", end="\r")
+
+    print("== Done with batch ==")
+
+    if choosen_repo_meta.config.print_progress:
+        print("Done downloading")
     
     return
 

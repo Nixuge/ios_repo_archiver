@@ -1,11 +1,11 @@
 from database.queries import Queries
-from database.queue import DbQueueInstance
 from database.utils import Utils
 from utils.packagesmanager import PackagesManager
 from objects.files.release import Release
 from objects.files.package import Package
 
 from utils.downloaders.utils import download_str
+from utils.vars.db import DbVars
 
 class Repo:
     table_name: str
@@ -29,7 +29,7 @@ class Repo:
         self.release = Release(download_str(self.url + "Release"))
         self.packages = PackagesManager(self.url, self.release).get_packages()
 
-        DbQueueInstance.add_important_instruction(Queries.get_create_repo_table_query(table_name))
+        DbVars.Queue.add_important_instruction(Queries.get_create_repo_table_query(table_name))
         #TODO: use subpath
 
     def remove_existing_packages(self):

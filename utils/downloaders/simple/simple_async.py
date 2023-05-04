@@ -18,7 +18,7 @@ class SimpleDownloaderAsync(_SimpleDownloaderBase):
         r: httpx.Response
         
         try:
-            r = await httpx.AsyncClient().get(self.url, headers=self.headers)
+            r = await httpx.AsyncClient().get(self.url, headers=self.headers, follow_redirects=True)
         except httpx._exceptions.ConnectError:
             return Result(valid_url=False)
         

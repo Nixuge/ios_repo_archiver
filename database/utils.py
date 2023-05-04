@@ -1,8 +1,8 @@
 from sqlite3 import Cursor
 from typing import Any
 from database.queries import Queries
-from database.queue import DbQueueInstance
 from objects.files.package import Package
+from utils.vars.db import DbVars
 
 
 class Utils:
@@ -55,4 +55,4 @@ class Utils:
     def contains_md5(table: str, md5: str):
         query = Queries.get_where_contains_md5(table, md5)
         
-        return DbQueueInstance.cursor.execute(query).fetchone()
+        return DbVars.ReadInstance.cursor.execute(query).fetchone()

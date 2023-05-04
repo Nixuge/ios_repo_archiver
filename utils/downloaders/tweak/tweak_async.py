@@ -16,7 +16,7 @@ class TweakDownloaderAsync(_TweakDownloaderBase):
         temp_filename = random_string()
         md5 = hashlib.md5()
         async with httpx.AsyncClient() as client:
-            r = await client.get(self.url, headers=self.headers)
+            r = await client.get(self.url, headers=self.headers, follow_redirects=True)
             stream = r.stream
             # r.raise_for_status()
             # we don't want to allow redirects or anything here, only 200s

@@ -1,12 +1,12 @@
 from typing import Any
 from database.queries import Queries
-from database.queue import DbQueueInstance
 from database.utils import Utils
 from objects.files.package import Package
 from objects.repo import Repo
 from utils.downloaders.simple.simple_async import SimpleDownloaderAsync
 from utils.downloaders.tweak._tweak_base import _TweakDownloaderBase as TweakDL
 from utils.downloaders.tweak.tweak_async import TweakDownloaderAsync
+from utils.vars.db import DbVars
 from utils.vars.file import Folder
 from utils.vars.statuscodes import StatusCodes
 
@@ -48,11 +48,11 @@ class PackageDownloadAsync:
                 self.paid = True
                 print("Got paid package !")
             else:
-                print(f"Got an error ! {result.status_code}")
+                print(f"Got an error ! {result.status_code} {self.repo.url}{self.package.data['filename']}")
                 return None #TODO: return proper error
         
         other_keys = await self._download_other_data()
 
         final_args = Utils.build_args(self.package, other_keys, self.paid)
 
-        DbQueueInstance.add_instuction(Queries.get_insert_query(self.repo.table_name), final_args)
+        DbVars.Queue.add_instuction(Queries.get_insert_query(self.repo.table_name), final_args)

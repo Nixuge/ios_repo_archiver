@@ -68,5 +68,3 @@ class DbQueue(Thread):
             # then perform normal (insert) queries
             if len(self.instructions) > 0:
                 self._process_normal_instruction()
-
-DbQueueInstance = DbQueue(DbInstance("test.db"))
