@@ -75,16 +75,18 @@ repos: list[RepoMeta] = [
 names = [repo.url for repo in repos]
 print(f"Repos available: {names}")
 # choosen_repo = input("Choose your repo of choice: ")
-choosen_repo = "https://repo.hackyouriphone.org"
+# choosen_repo = "https://repo.hackyouriphone.org"
 
-choosen_repo_meta: RepoMeta = RepoMeta("invalid.fr")
-for repometa in repos:
-    if repometa.url == choosen_repo.strip():
-        choosen_repo_meta = repometa
-        break
+# choosen_repo_meta: RepoMeta = RepoMeta("invalid.fr")
+# for repometa in repos:
+#     if repometa.url == choosen_repo.strip():
+#         choosen_repo_meta = repometa
+#         break
 
-if choosen_repo_meta.url == "invalid.fr":
-    print("Select an available repo", 1 / 0)
+# if choosen_repo_meta.url == "invalid.fr":
+#     print("Select an available repo", 1 / 0)
+
+choosen_repo_meta = RepoMeta("https://repo.cypwn.xyz/")
 
 
 async def main():
@@ -115,7 +117,7 @@ def download_all_noasync(repo: Repo):
     return
 
 
-async def download_all_async(repo: Repo, task_limit: int = 10):
+async def download_all_async(repo: Repo, task_limit: int = 5):
     print(f"=====STARTING ASYNC REPO DOWNLOAD ({task_limit} tasks max)=====")
     downloaded = 0
     packages: list[PackageDownloadAsync] = []

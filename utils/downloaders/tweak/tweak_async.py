@@ -20,6 +20,8 @@ class TweakDownloaderAsync(_TweakDownloaderBase):
                 r = await client.get(self.url, headers=self.headers, follow_redirects=True)
             except httpx.ConnectTimeout:
                 return Result(finished=False, status_code=9999)
+            except httpx.ReadTimeout:
+                return Result(finished=False, status_code=9999)
             # r.raise_for_status()
             # we don't want to allow redirects or anything here, only 200s
             # redirect = usually paid package (see Chariz)

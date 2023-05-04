@@ -48,7 +48,7 @@ class PackageDownloadAsync:
                 self.paid = True
                 print("Got paid package !")
             else:
-                print(f"Got an error ! {result.status_code} {self.repo.url}{self.package.data['filename']}")
+                print(f"Got an error ! {result.status_code} hash:{result.hash_check} {self.repo.url}{self.package.data['filename']}")
                 return None #TODO: return proper error
         
         other_keys = await self._download_other_data()

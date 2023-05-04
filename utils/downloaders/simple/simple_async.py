@@ -1,5 +1,6 @@
 import hashlib
 import os
+import ssl
 
 import httpx
 from utils.downloaders.result import Result
@@ -24,6 +25,12 @@ class SimpleDownloaderAsync(_SimpleDownloaderBase):
         except httpx.InvalidURL:
             print("Invalid url: " + self.url)
             return Result(valid_url=False)
+        except ssl.SSLCertVerificationError:
+            return Result(finished=False, status_code=9998)
+        except httpx.ReadTimeout:
+            return Result(finished=False, status_code=9999)
+        except httpx.RemoteProtocolError:
+            return Result(finished=False, status_code=9997)
         
         if r.status_code != 200:
             return Result(status_code=r.status_code)
