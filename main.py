@@ -69,11 +69,11 @@ repos: list[RepoMeta] = [
     RepoMeta("https://apt.torrekie.com/")
 ]
 
-
+#TODO: implement CyDown
 
 # Kinda dirty repo picker for now
-names = [repo.url for repo in repos]
-print(f"Repos available: {names}")
+# names = [repo.url for repo in repos]
+# print(f"Repos available: {names}")
 # choosen_repo = input("Choose your repo of choice: ")
 # choosen_repo = "https://repo.hackyouriphone.org"
 
@@ -143,8 +143,8 @@ async def download_all_async(repo: Repo, task_limit: int = 5):
         await asyncio.sleep(.2)
         if choosen_repo_meta.config.print_progress:
             print(f"Downloaded/Remaining packages: {downloaded}/{len(packages)}, Remaining tasks: {len(running_tasks)}      ", end="\r")
-
-    print("== Done with batch ==")
+    
+    print("\n== Done with batch ==")
 
     if choosen_repo_meta.config.print_progress:
         print("Done downloading")
