@@ -42,8 +42,8 @@ class PackageDownload:
             
         return other_data
 
-    def download_package_content_db(self):
-        result = TweakDL(self.repo.url, self.package.data["filename"], self.package.hashes).download()
+    async def download_package_content_db(self):
+        result = await TweakDL(self.repo.url, self.package.data["filename"], self.package.hashes).download_async()
         if not result.finished:
             if result.status_code in StatusCodes.paid:
                 self.paid = True

@@ -1,5 +1,6 @@
 #!/bin/python3
 
+import asyncio
 from config.argparser import ArgsParser
 from config.config import Config
 from utils.packagedownload import PackageDownload
@@ -86,23 +87,29 @@ if choosen_repo_meta.url == "invalid.fr":
     print("Select an available repo", 1 / 0)
 
 
-# Init repo
-repo = Repo(choosen_repo_meta.sql_name, choosen_repo_meta.url, sqlinfo)
+async def main():
+    # Init repo
+    repo = Repo(choosen_repo_meta.sql_name, choosen_repo_meta.url, sqlinfo)
 
-if choosen_repo_meta.config.print_progress:
-    print(f"Full packages: {len(repo.packages)}")
-
-repo.remove_existing_packages()
-
-if choosen_repo_meta.config.print_progress:
-    print(f"Stripped packages: {len(repo.packages)}")
-
-# Download all
-for index, pkg in enumerate(repo.packages):
-    pkgdl = PackageDownload(repo, pkg, sqlinfo)
     if choosen_repo_meta.config.print_progress:
-        print_same_line(f"Downloading package {index+1}/{len(repo.packages)} ({pkg.data['package']})")
-    pkgdl.download_package_content_db()
+        print(f"Full packages: {len(repo.packages)}")
 
-if choosen_repo_meta.config.print_progress:
-    print("Done downloading")
+    repo.remove_existing_packages()
+
+    if choosen_repo_meta.config.print_progress:
+        print(f"Stripped packages: {len(repo.packages)}")
+
+    await download_all(repo)
+
+async def download_all(repo: Repo):
+    for index, pkg in enumerate(repo.packages):
+        pkgdl = PackageDownload(repo, pkg, sqlinfo)
+        if choosen_repo_meta.config.print_progress:
+            print_same_line(f"Downloading package {index+1}/{len(repo.packages)} ({pkg.data['package']})")
+        await pkgdl.download_package_content_db()
+
+    if choosen_repo_meta.config.print_progress:
+        print("Done downloading")
+
+if __name__ == "__main__":
+    asyncio.run(main())

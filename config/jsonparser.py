@@ -18,7 +18,7 @@ class BaseLoader:
 
 
 class ConfigLoader(BaseLoader):
-    def parse(self) -> Config:
+    def parse(self) -> Config: # type: ignore
         #TODO: LOAD CONFIG HERE
         pass
 
