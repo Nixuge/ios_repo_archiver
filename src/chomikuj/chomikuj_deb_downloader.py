@@ -11,21 +11,33 @@ from bs4.element import Tag
 
 from asyncio import Task
 from chomikuj.async_limiter import AsyncLimiter
-from chomikuj.data.chomikuj_data import Endpoints, RequestData
+from chomikuj.data.chomikuj_data import DbVarsChomikuj, Endpoints, RequestData
 from chomikuj.data.chomikuj_file import ChomikujFile
 from chomikuj.data.chomikuj_utils import ChomikujUtils
+from database.queries import QueriesChomikuj
 
 from utils.stringutils import random_string
 from utils.vars.file import Folder, get_create_path
 
 class ChomikujDebDownloader(AsyncLimiter):
     def __init__(self) -> None:
-        # super().__init__(self.download_deb, max_task_count=30)
-        super().__init__(self.download_deb, max_task_count=1)
+        super().__init__(self.download_deb, max_task_count=30, polling_sleep=.05)
+        # super().__init__(self.download_deb, max_task_count=1)
+
+    def _add_to_sql(self, file: ChomikujFile, md5: str):
+        if ChomikujUtils.contains_md5(md5):
+            print(f"WARNING! contains md5 but file not registered ! ({file.filepath})")
+            return
+        
+        DbVarsChomikuj.Queue.add_instuction(
+            QueriesChomikuj.get_insert_query(),
+            (file.bundle_id, file.version, file.filename, file.size, md5)
+        )
 
     async def download_deb(self, file: ChomikujFile):
-        ChomikujUtils.contains_package(file)
-        # print("Starting download...")
+        if ChomikujUtils.contains_package(file):
+            return True # Already downloaded
+
         client = httpx.AsyncClient()
 
         # ===== Getting the direct download URL =====
@@ -75,13 +87,17 @@ class ChomikujDebDownloader(AsyncLimiter):
         full_path = f"{folder}/{md5}.deb"
         
         if os.path.isfile(full_path):
+            self._add_to_sql(file, md5)
+            os.remove(temp_filename)
             return True
     
         if not os.path.exists(folder):
             os.makedirs(folder)
         
-        # shutil.move(temp_filename, full_path)
-        
+        shutil.move(temp_filename, full_path)
+
+        self._add_to_sql(file, md5)
+
         return True
 
 async def main():

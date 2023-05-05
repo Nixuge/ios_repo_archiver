@@ -49,7 +49,7 @@ class ChomikujFile:
         # print(final_date_str)
 
     def __init__(self, filename: str, filepath: str, filesize: str, date_added: str) -> None:
-        self.filename = filename
+        self.filename = filename.replace(' ', '')
         self.filepath = filepath
         self.filesize = filesize.replace(',', '.') # saved in EU format (using , for decimals)
         self._parse_datetime(date_added)

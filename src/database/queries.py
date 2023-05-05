@@ -73,7 +73,7 @@ class Queries:
 class QueriesChomikuj(Queries):
     @override
     @staticmethod
-    def get_create_repo_table_query(name: str) -> str:
+    def get_create_repo_table_query() -> str:
         return f"""CREATE TABLE IF NOT EXISTS chomikuj_packages (
                     bundle_id VARCHAR(255) NOT NULL,
                     version VARCHAR(255),
@@ -87,5 +87,5 @@ class QueriesChomikuj(Queries):
                     );"""
 
     @staticmethod
-    def get_insert_query(table: str) -> str:
-        return f"""INSERT INTO {table} VALUES (?,?,?,?,?);"""
+    def get_insert_query() -> str:
+        return f"""INSERT INTO chomikuj_packages VALUES (?,?,?,?,?);"""

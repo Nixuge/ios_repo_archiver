@@ -8,7 +8,7 @@ from database.instance import DbInstance
 class DbQueue(Thread):
     # should be thread safe as lists are thread safe
     #TODO: use queue (https://www.geeksforgeeks.org/queue-in-python/ ?)
-    instructions: list[tuple[str, list | None]] #0 = query, 1 = data
+    instructions: list[tuple[str, list | tuple | None]] #0 = query, 1 = data
     important_instructions: list[str]
     connection: Connection
     cursor: Cursor
@@ -24,7 +24,7 @@ class DbQueue(Thread):
     def add_important_instruction(self, full_query: str):
         self.important_instructions.append(full_query)
 
-    def add_instuction(self, query: str, data: list | None):
+    def add_instuction(self, query: str, data: list | tuple | None):
         self.instructions.append((query, data))
 
     # Note for both _process_important_instructions() & _process_normal_instruction():

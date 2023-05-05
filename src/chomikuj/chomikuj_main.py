@@ -1,11 +1,15 @@
 from chomikuj.chomikuj_deb_downloader import ChomikujDebDownloader
 from chomikuj.chomikuj_page_parser import ChomikujPageParser
+from chomikuj.data.chomikuj_data import DbVarsChomikuj
+from database.queries import QueriesChomikuj
 
 # chomikuj is kinda separated from the whole thing
 # as it's not really a repo
 # Still has its place here as it holds tweaks
 
 async def chomikuj_main():
+    DbVarsChomikuj.Queue.add_important_instruction(QueriesChomikuj.get_create_repo_table_query())
+
     page_parser = ChomikujPageParser()
     print("Starting page parser")
     await page_parser.grab_all()
