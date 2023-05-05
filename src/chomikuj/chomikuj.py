@@ -1,24 +1,36 @@
 
 import asyncio
+import hashlib
+import json
+import os
+from pprint import pprint
+import shutil
 import httpx
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 
-# TODO: move to real things once done
-from chomikuj.chomikuj_file import ChomikujFile
-from chomikuj.chomikuj_data import Endpoints, RequestData
+from asyncio import Task
+from chomikuj.data.chomikuj_data import Endpoints, RequestData
+from chomikuj.data.chomikuj_file import ChomikujFile
+
+from utils.stringutils import random_string
+from utils.vars.file import Folder, get_create_path
 
 class ChomikujDownloader:
     last_page: int
+    tasks: list[Task]
     downloaded_pages: list[int]
     remaining_pages: list[int]
     failed_pages: list[int]
+    max_tasks: int
 
-    def __init__(self) -> None:
+    def __init__(self, max_tasks: int = 5) -> None:
         self._get_last_page()
         self.downloaded_pages = []
         self.remaining_pages = []
         self.failed_pages = []
+        self.tasks = []
+        self.max_tasks = max_tasks
     
     def _get_last_page(self) -> None:
         r = httpx.get(Endpoints.files_last_page, follow_redirects=True)
@@ -27,6 +39,7 @@ class ChomikujDownloader:
 
         # URL redirects to same as Endpoints.last_page but with ,9999 replaced by max page num
         self.last_page = int(str(r.url).split(",")[-1])
+        print(f"Max Chomikuj page number: {self.last_page}")
 
     def _bs_get_chomikuj_filelist_from_page(self, soup: BeautifulSoup) -> list[ChomikujFile]:
         # get the listview element to avoid grabbing other elements on the side of the page
@@ -50,22 +63,20 @@ class ChomikujDownloader:
         return ChomikujFile(
             filename=download_element.find("span").text, # type: ignore
             filepath=path,
-            id=path.split(",")[-1].split(".")[0],
             filesize=size,
             date_added=date
         )
 
     async def get_files_from_page(self, page: int) -> list[ChomikujFile] | None:
         endpoint = f"{Endpoints.files_page},{page}" if page > 1 else Endpoints.files_page
-        print(endpoint)
         try:
             r = await httpx.AsyncClient().get(endpoint)
         except:
-            print("Error grabbing page")
+            print("Error grabbing page (httpx exception)")
             self.failed_pages.append(page)
             return
         if r.status_code != 200:
-            print("Error grabbing page")
+            print(f"Error grabbing page (error code: {r.status_code})")
             self.failed_pages.append(page)
             return
 
@@ -76,23 +87,59 @@ class ChomikujDownloader:
         return files
 
     async def download_deb(self, file: ChomikujFile):
-        r = await httpx.AsyncClient().post(
-            Endpoints.download,
-            data={
-                "fileId": file.id, 
-                # RequestData.token_key: RequestData.token_value
-            },
-            headers= {
-                "X-Requested-With": "XMLHttpRequest",
-                "Cookie": RequestData.cookie,
-                "content-type": "application/x-www-form-urlencoded"
-            }
-        )
-        if "Niestety podczas przetwarzania" in r.text:
+        print("Starting download...")
+        client = httpx.AsyncClient()
+
+        # ===== Getting the direct download URL =====
+        try:
+            r_post = await client.post(
+                Endpoints.download,
+                data={
+                    "fileId": file.id, 
+                    RequestData.token_key: RequestData.token_value
+                },
+                headers=RequestData.headers
+            )
+        except:
             return False
-            # return ChomikujDlResult(success=False)
-        print(r.text)
-        pass
+        if r_post.status_code != 200 or "Niestety podczas przetwarzania" in r_post.text:
+            return False
+
+        data_dict = json.loads(r_post.text)
+        url = data_dict.get("redirectUrl")
+
+        # ===== Downloading the actual file =====
+        try:
+            r_get = await client.get(url)
+        except:
+            return False
+        if r_post.status_code != 200:
+            return False
+        
+        temp_filename = random_string()
+        md5 = hashlib.md5()
+        with open(temp_filename, 'wb') as f:
+            for chunk in r_get.iter_bytes(chunk_size=4096):
+                md5.update(chunk)
+                f.write(chunk)
+
+        # ===== other checks, metadata things & moving the file =====
+        md5 = md5.hexdigest()
+
+        file.set_size(os.stat(temp_filename).st_size)
+
+        folder = get_create_path(Folder.debs, md5)
+        full_path = f"{folder}/{md5}.deb"
+        
+        if os.path.isfile(full_path):
+            return True
+    
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+        
+        shutil.move(temp_filename, full_path)
+        
+        return True
 
 async def main():
     dler = ChomikujDownloader()

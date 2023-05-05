@@ -10,6 +10,9 @@ from objects.repometa import RepoMeta
 from objects.repo import Repo
 from utils.packagedownloadasync import PackageDownloadAsync
 
+from chomikuj.chomikuj import main as chomikuj_main
+
+
 from utils.prints import print_same_line
 from utils.vars.db import DbVars
 
@@ -154,8 +157,9 @@ async def download_all_async(repo: Repo, task_limit: int = 5):
 
 
 async def main_chomikuj():
-    dler = ChomikujDownloader()
-    # dler.
+    await chomikuj_main()
+    # pass
+
 
 if __name__ == "__main__":
     # asyncio.run(main())
