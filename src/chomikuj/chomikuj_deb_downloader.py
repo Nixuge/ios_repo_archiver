@@ -13,17 +13,19 @@ from asyncio import Task
 from chomikuj.async_limiter import AsyncLimiter
 from chomikuj.data.chomikuj_data import Endpoints, RequestData
 from chomikuj.data.chomikuj_file import ChomikujFile
+from chomikuj.data.chomikuj_utils import ChomikujUtils
 
 from utils.stringutils import random_string
 from utils.vars.file import Folder, get_create_path
 
 class ChomikujDebDownloader(AsyncLimiter):
-
     def __init__(self) -> None:
-        super().__init__(self.download_deb)
+        # super().__init__(self.download_deb, max_task_count=30)
+        super().__init__(self.download_deb, max_task_count=1)
 
     async def download_deb(self, file: ChomikujFile):
-        print("Starting download...")
+        ChomikujUtils.contains_package(file)
+        # print("Starting download...")
         client = httpx.AsyncClient()
 
         # ===== Getting the direct download URL =====
@@ -37,20 +39,25 @@ class ChomikujDebDownloader(AsyncLimiter):
                 headers=RequestData.headers
             )
         except:
-            return False
+            return self.fail(file)
         if r_post.status_code != 200 or "Niestety podczas przetwarzania" in r_post.text:
-            return False
+            return self.fail(file)
 
-        data_dict = json.loads(r_post.text)
-        url = data_dict.get("redirectUrl")
+        try:
+            data_dict = json.loads(r_post.text)
+            url = data_dict["redirectUrl"]
+        except:
+            print("Error while loading json data! Possibly unhandled error !")
+            print(r_post.text)
+            return self.fail(file)
 
         # ===== Downloading the actual file =====
         try:
             r_get = await client.get(url)
         except:
-            return False
+            return self.fail(file)
         if r_post.status_code != 200:
-            return False
+            return self.fail(file)
         
         temp_filename = random_string()
         md5 = hashlib.md5()
@@ -73,7 +80,7 @@ class ChomikujDebDownloader(AsyncLimiter):
         if not os.path.exists(folder):
             os.makedirs(folder)
         
-        shutil.move(temp_filename, full_path)
+        # shutil.move(temp_filename, full_path)
         
         return True
 

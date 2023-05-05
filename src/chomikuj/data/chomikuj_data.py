@@ -32,7 +32,7 @@ class RequestData:
                 }
 
 
-class Db:
+class DbVarsChomikuj:
     # TO BE USED STRICTLY FOR READ TASKS !
     # USE THE QUEUE OTHERWISE !
     ReadInstance = DbInstance("chomikuj.db")
@@ -43,4 +43,4 @@ class Db:
     Queue = DbQueue(DbInstance("chomikuj.db"))
 
 
-Db.Queue.start()
+DbVarsChomikuj.Queue.start()

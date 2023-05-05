@@ -18,7 +18,8 @@ class ChomikujPageParser(AsyncLimiter):
         super().__init__(self.get_files_from_page, max_task_count=50)
         self.files = []
         self._get_last_page()
-        self.remaining_elements = list(range(1, self.last_page+1))
+        # self.remaining_elements = list(range(1, self.last_page+1))
+        self.remaining_elements = list(range(1, 11))
     
     def _get_last_page(self) -> None:
         r = httpx.get(Endpoints.files_last_page, follow_redirects=True)
@@ -51,8 +52,8 @@ class ChomikujPageParser(AsyncLimiter):
         return ChomikujFile(
             filename=download_element.find("span").text, # type: ignore
             filepath=path,
-            filesize=size,
-            date_added=date
+            filesize=size.text,
+            date_added=date.text
         )
 
     async def get_files_from_page(self, page: int):
@@ -61,33 +62,13 @@ class ChomikujPageParser(AsyncLimiter):
             r = await httpx.AsyncClient().get(endpoint)
         except:
             print("Error grabbing page (httpx exception)")
-            self.remaining_elements.append(page)
-            return
+            return self.fail(page)
         if r.status_code != 200:
             print(f"Error grabbing page (error code: {r.status_code})")
-            self.remaining_elements.append(page)
-            return
+            return self.fail(page)
 
         soup = BeautifulSoup(r.text, "lxml")
 
         grabbed_files = self._bs_get_chomikuj_filelist_from_page(soup)
         for grabbed_file in grabbed_files:
             self.files.append(grabbed_file)
-
-    # @override
-    # async def grab_all(self):
-    #     await super().grab_all()
-
-
-async def main():
-    dler = ChomikujPageParser()
-    print("hello")
-    await dler.grab_all()
-    print(len(dler.files))
-    # files = await dler.get_files_from_page(0)
-    # await dler.download_deb(files[0]) # type: ignore
-    # page_html = await get_files_from_page(get_last_page())
-
-
-if __name__ == "__main__":
-    asyncio.run(main())

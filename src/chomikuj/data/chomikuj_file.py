@@ -9,12 +9,17 @@ class ChomikujFile:
     bundle_id: str
     version: str
     size: int | None
+    
+    def _parse_date(self, date: str):
+        print(date)
+        input()
+        self.date_added = date
 
     def __init__(self, filename: str, filepath: str, filesize: str, date_added: str) -> None:
         self.filename = filename
         self.filepath = filepath
         self.filesize = filesize
-        self.date_added = date_added
+        self._parse_date(date_added)
         self.id = filepath.split(",")[-1].split(".")[0]
         tempIdVer = filename.replace("_iphoneos-arm64", "").replace("_iphoneos-arm", "")
         if "_v" in tempIdVer:

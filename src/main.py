@@ -10,7 +10,7 @@ from objects.repometa import RepoMeta
 from objects.repo import Repo
 from utils.packagedownloadasync import PackageDownloadAsync
 
-from chomikuj.chomikuj_page_parser import main as chomikuj_main
+from chomikuj.chomikuj_main import chomikuj_main
 
 
 from utils.prints import print_same_line
