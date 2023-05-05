@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 from bs4.element import Tag
 
 # TODO: move to real things once done
-from chomikuj_file import ChomikujFile
-from chomikuj_data import Endpoints
+from chomikuj.chomikuj_file import ChomikujFile
+from chomikuj.chomikuj_data import Endpoints, RequestData
 
 class ChomikujDownloader:
     last_page: int
@@ -45,14 +45,17 @@ class ChomikujDownloader:
         
         download_element: Tag = fileItemContainer.find("a", {"class": "expanderHeader downloadAction downloadContext"}) # type: ignore
         
+        path: str = download_element.get("href") # type: ignore
+
         return ChomikujFile(
             filename=download_element.find("span").text, # type: ignore
-            filepath=download_element.get("href"), # type: ignore
+            filepath=path,
+            id=path.split(",")[-1].split(".")[0],
             filesize=size,
             date_added=date
         )
 
-    async def get_files_from_page(self, page: int):
+    async def get_files_from_page(self, page: int) -> list[ChomikujFile] | None:
         endpoint = f"{Endpoints.files_page},{page}" if page > 1 else Endpoints.files_page
         print(endpoint)
         try:
@@ -65,16 +68,36 @@ class ChomikujDownloader:
             print("Error grabbing page")
             self.failed_pages.append(page)
             return
-        print("done requesting")
+
         soup = BeautifulSoup(r.text, "lxml")
+
         files = self._bs_get_chomikuj_filelist_from_page(soup)
-        print(len(files))
+       
+        return files
 
-
-        # print(len(divEle))
+    async def download_deb(self, file: ChomikujFile):
+        r = await httpx.AsyncClient().post(
+            Endpoints.download,
+            data={
+                "fileId": file.id, 
+                # RequestData.token_key: RequestData.token_value
+            },
+            headers= {
+                "X-Requested-With": "XMLHttpRequest",
+                "Cookie": RequestData.cookie,
+                "content-type": "application/x-www-form-urlencoded"
+            }
+        )
+        if "Niestety podczas przetwarzania" in r.text:
+            return False
+            # return ChomikujDlResult(success=False)
+        print(r.text)
+        pass
 
 async def main():
-    await ChomikujDownloader().get_files_from_page(0)
+    dler = ChomikujDownloader()
+    files = await dler.get_files_from_page(0)
+    await dler.download_deb(files[0]) # type: ignore
     # page_html = await get_files_from_page(get_last_page())
 
 

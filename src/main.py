@@ -2,6 +2,7 @@
 
 import asyncio
 from asyncio import Task
+from chomikuj.chomikuj import ChomikujDownloader
 from config.argparser import ArgsParser
 from config.config import Config
 from utils.packagedownload import PackageDownload
@@ -151,8 +152,15 @@ async def download_all_async(repo: Repo, task_limit: int = 5):
     
     return
 
+
+async def main_chomikuj():
+    dler = ChomikujDownloader()
+    # dler.
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    # asyncio.run(main())
+    asyncio.run(main_chomikuj())
     # TODO: fade out the "sync" versions, as they're basically useless
     # since you can just call and await all of the async ones
     # and you'll get the same result
+
