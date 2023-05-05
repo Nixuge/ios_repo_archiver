@@ -14,11 +14,11 @@ class DbQueue(Thread):
     cursor: Cursor
     should_stop: bool = False
 
-    def __init__(self, db_manager: DbInstance) -> None:
+    def __init__(self, db_file: str) -> None:
         super().__init__(None, None, "DbQueueThread") #see thread init (unneeded basically)
         self.instructions = []
         self.important_instructions = []
-        self.connection = sqlite3.connect(db_manager.db_file, check_same_thread=False)
+        self.connection = sqlite3.connect(db_file, check_same_thread=False)
         self.cursor = self.connection.cursor()
     
     def add_important_instruction(self, full_query: str):

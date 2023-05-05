@@ -10,4 +10,4 @@ class DbVars:
     # TO BE USED STRICTLY FOR WRITE TASKS, WITH THE 
     # add_instuction() AND add_important_instruction() FUNCTIONS ! 
     # USE THE ReadInstance TO READ DATA INSTEAD !
-    Queue = DbQueue(DbInstance("test.db"))
+    Queue = DbQueue("test.db")

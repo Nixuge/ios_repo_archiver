@@ -40,7 +40,7 @@ class DbVarsChomikuj:
     # TO BE USED STRICTLY FOR WRITE TASKS, WITH THE 
     # add_instuction() AND add_important_instruction() FUNCTIONS ! 
     # USE THE ReadInstance TO READ DATA INSTEAD !
-    Queue = DbQueue(DbInstance("chomikuj.db"))
+    Queue = DbQueue("chomikuj.db")
 
 
 DbVarsChomikuj.Queue.start()
