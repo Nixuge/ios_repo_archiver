@@ -31,7 +31,6 @@ class AsyncLimiter:
     #
     # Will automatically add back to the remaining list & return false
     def fail(self, element):
-        print("Failed apparently...")
         self.remaining_elements.append(element)
         return False
 

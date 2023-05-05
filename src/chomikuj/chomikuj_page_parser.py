@@ -18,8 +18,8 @@ class ChomikujPageParser(AsyncLimiter):
         super().__init__(self.get_files_from_page, max_task_count=50)
         self.files = []
         self._get_last_page()
-        # self.remaining_elements = list(range(1, self.last_page+1))
-        self.remaining_elements = list(range(1, 11))
+        self.remaining_elements = list(range(1, self.last_page+1))
+        # self.remaining_elements = list(range(1, 11))
     
     def _get_last_page(self) -> None:
         r = httpx.get(Endpoints.files_last_page, follow_redirects=True)
