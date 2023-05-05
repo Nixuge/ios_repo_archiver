@@ -2,7 +2,7 @@
 
 import asyncio
 from asyncio import Task
-from chomikuj.chomikuj import ChomikujDownloader
+from chomikuj.chomikuj_deb_downloader import ChomikujDebDownloader
 from config.argparser import ArgsParser
 from config.config import Config
 from utils.packagedownload import PackageDownload
@@ -10,7 +10,7 @@ from objects.repometa import RepoMeta
 from objects.repo import Repo
 from utils.packagedownloadasync import PackageDownloadAsync
 
-from chomikuj.chomikuj import main as chomikuj_main
+from chomikuj.chomikuj_page_parser import main as chomikuj_main
 
 
 from utils.prints import print_same_line

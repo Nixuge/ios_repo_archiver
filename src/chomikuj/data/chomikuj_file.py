@@ -17,7 +17,17 @@ class ChomikujFile:
         self.date_added = date_added
         self.id = filepath.split(",")[-1].split(".")[0]
         tempIdVer = filename.replace("_iphoneos-arm64", "").replace("_iphoneos-arm", "")
-        self.bundle_id, self.version = tempIdVer.split("_v")
+        if "_v" in tempIdVer:
+            self.bundle_id, self.version = tempIdVer.split("_v")
+        elif "_ v" in tempIdVer:
+            self.bundle_id, self.version = tempIdVer.split("_ v")
+        else:
+            print(f"\n\nCOULDN'T GET PROPRE BUNDLE ID/VERSION! FILENAME: \"{filename}\"\n")
+            self.bundle_id = tempIdVer
+            self.version = ""
+        
+        self.bundle_id = self.bundle_id.strip()
+        self.version = self.version.strip()
 
     # Not really needed but mmmm Java
     def set_size(self, size: int) -> None:
