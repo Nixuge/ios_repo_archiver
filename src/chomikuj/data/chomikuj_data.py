@@ -35,12 +35,12 @@ class RequestData:
 class DbVarsChomikuj:
     # TO BE USED STRICTLY FOR READ TASKS !
     # USE THE QUEUE OTHERWISE !
-    ReadInstance = DbInstance("chomikuj.db")
+    ReadInstance = DbInstance("/home/nix/db/chomikuj.db")
 
     # TO BE USED STRICTLY FOR WRITE TASKS, WITH THE 
     # add_instuction() AND add_important_instruction() FUNCTIONS ! 
     # USE THE ReadInstance TO READ DATA INSTEAD !
-    Queue = DbQueue("chomikuj.db")
+    Queue = DbQueue("/home/nix/db/chomikuj.db")
 
 
 DbVarsChomikuj.Queue.start()

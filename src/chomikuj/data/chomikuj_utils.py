@@ -16,4 +16,14 @@ class ChomikujUtils:
     def contains_package(file: ChomikujFile):
         query = QueriesChomikuj.get_where_contains_key("chomikuj_packages", "filename", file.filename)
 
+        # row = DbVarsChomikuj.ReadInstance.cursor.execute(query).fetchone()
+        # if not row:
+        #     return False
+        
+        # # Fix bc i forgot to add the date into my sql queries before lmao
+        # if row[4] == None:
+        #     query2 = f"""UPDATE "chomikuj_packages" SET date = "{file.date_added}" WHERE filename="{file.filename}";"""
+        #     DbVarsChomikuj.Queue.add_instuction(query2, None)
+
+        # return row
         return DbVarsChomikuj.ReadInstance.cursor.execute(query).fetchone()

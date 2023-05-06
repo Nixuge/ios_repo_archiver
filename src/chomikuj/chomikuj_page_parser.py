@@ -61,10 +61,10 @@ class ChomikujPageParser(AsyncLimiter):
         try:
             r = await httpx.AsyncClient().get(endpoint)
         except:
-            print("Error grabbing page (httpx exception)")
+            # print("Error grabbing page (httpx exception)")
             return self.fail(page)
         if r.status_code != 200:
-            print(f"Error grabbing page (error code: {r.status_code})")
+            # print(f"Error grabbing page (error code: {r.status_code})")
             return self.fail(page)
 
         soup = BeautifulSoup(r.text, "lxml")

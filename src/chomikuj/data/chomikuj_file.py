@@ -43,7 +43,9 @@ class ChomikujFile:
 
         # Time
         final_date_str += " "
-        final_date_str += splitted_date[3]
+        time = splitted_date[3]
+        if len(time) != 5: time = "0" + time # add "0" in front if not in "HH:MM" format (H:MM instead)
+        final_date_str += time
 
         self.date_added = final_date_str
         # print(final_date_str)
@@ -54,13 +56,13 @@ class ChomikujFile:
         self.filesize = filesize.replace(',', '.') # saved in EU format (using , for decimals)
         self._parse_datetime(date_added)
         self.id = filepath.split(",")[-1].split(".")[0]
-        tempIdVer = filename.replace("_iphoneos-arm64", "").replace("_iphoneos-arm", "")
+        tempIdVer = self.filename.replace("_iphoneos-arm64", "").replace("_iphoneos-arm", "")
         if "_v" in tempIdVer:
             self.bundle_id, self.version = tempIdVer.split("_v")
         elif "_ v" in tempIdVer:
             self.bundle_id, self.version = tempIdVer.split("_ v")
         else:
-            print(f"\n\nCOULDN'T GET PROPRE BUNDLE ID/VERSION! FILENAME: \"{filename}\"\n")
+            print(f"\nCOULDN'T GET PROPRE BUNDLE ID/VERSION! FILENAME: \"{filename}\"")
             self.bundle_id = tempIdVer
             self.version = ""
         

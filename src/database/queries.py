@@ -80,6 +80,7 @@ class QueriesChomikuj(Queries):
 
                     filename TEXT,
                     size INT,
+                    date DATETIME,
                     
                     md5sum VARCHAR(32) NOT NULL,
 
@@ -88,4 +89,4 @@ class QueriesChomikuj(Queries):
 
     @staticmethod
     def get_insert_query() -> str:
-        return f"""INSERT INTO chomikuj_packages VALUES (?,?,?,?,?);"""
+        return f"""INSERT INTO chomikuj_packages VALUES (?,?,?,?,?,?);"""

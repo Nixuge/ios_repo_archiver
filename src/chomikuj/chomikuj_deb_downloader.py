@@ -25,13 +25,19 @@ class ChomikujDebDownloader(AsyncLimiter):
         # super().__init__(self.download_deb, max_task_count=1)
 
     def _add_to_sql(self, file: ChomikujFile, md5: str):
-        if ChomikujUtils.contains_md5(md5):
-            print(f"WARNING! contains md5 but file not registered ! ({file.filepath})")
+        row_contains = ChomikujUtils.contains_md5(md5)
+        if row_contains:
+            print("===============")
+            print(f"WARNING! contains md5 but file not registered !")
+            print(f"Filepath: {file.filepath}")
+            print(f"Already present data: {row_contains}")
+            print("===============")
+            print("")
             return
         
         DbVarsChomikuj.Queue.add_instuction(
             QueriesChomikuj.get_insert_query(),
-            (file.bundle_id, file.version, file.filename, file.size, md5)
+            (file.bundle_id, file.version, file.filename, file.size, file.date_added, md5)
         )
 
     async def download_deb(self, file: ChomikujFile):
@@ -93,7 +99,7 @@ class ChomikujDebDownloader(AsyncLimiter):
     
         if not os.path.exists(folder):
             os.makedirs(folder)
-        
+    
         shutil.move(temp_filename, full_path)
 
         self._add_to_sql(file, md5)
