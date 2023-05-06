@@ -23,3 +23,5 @@ async def chomikuj_main():
     # files = await dler.get_files_from_page(0)
     # await dler.download_deb(files[0]) # type: ignore
     # page_html = await get_files_from_page(get_last_page())
+
+    DbVarsChomikuj.Queue.should_stop = True

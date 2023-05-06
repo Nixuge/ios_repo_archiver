@@ -107,8 +107,6 @@ async def main():
 
     await download_all_async(repo)
 
-    DbVars.Queue.should_stop = True
-
 def download_all_noasync(repo: Repo):
     for index, pkg in enumerate(repo.packages):
         pkgdl = PackageDownload(repo, pkg)
@@ -156,15 +154,11 @@ async def download_all_async(repo: Repo, task_limit: int = 5):
     return
 
 
-async def main_chomikuj():
-    await chomikuj_main()
-    # pass
-
-
 if __name__ == "__main__":
     # asyncio.run(main())
-    asyncio.run(main_chomikuj())
+    asyncio.run(chomikuj_main())
     # TODO: fade out the "sync" versions, as they're basically useless
     # since you can just call and await all of the async ones
     # and you'll get the same result
 
+DbVars.Queue.should_stop = True
