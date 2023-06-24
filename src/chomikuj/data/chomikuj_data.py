@@ -1,7 +1,5 @@
 # https://github.com/Paisseon/Violyn-/Violyn/DataTypes/ChomikAPI.swift
 
-from dataclasses import dataclass
-
 from database.instance import DbInstance
 from database.queue import DbQueue
 

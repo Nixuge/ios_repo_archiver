@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 class ChomikujFile:
     filename: str
     filepath: str
@@ -62,7 +60,7 @@ class ChomikujFile:
         elif "_ v" in tempIdVer:
             self.bundle_id, self.version = tempIdVer.split("_ v")
         else:
-            print(f"\nCOULDN'T GET PROPRE BUNDLE ID/VERSION! FILENAME: \"{filename}\"")
+            print(f"\n\nCOULDN'T GET PROPER BUNDLE ID/VERSION! FILENAME: \"{filename}\"\n")
             self.bundle_id = tempIdVer
             self.version = ""
         

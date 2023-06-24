@@ -2,10 +2,6 @@
 # Handle errors (retrying, seeing if paid package)
 # Allow device, unique id, firmware configuration
 
-import hashlib
-import os
-import requests
-from utils.downloaders.result import Result
 import mimetypes
 
 from utils.vars.file import get_create_path

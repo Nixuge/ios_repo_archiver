@@ -1,5 +1,4 @@
 
-import asyncio
 from typing_extensions import override
 import httpx
 from bs4 import BeautifulSoup

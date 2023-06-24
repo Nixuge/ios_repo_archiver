@@ -2,9 +2,7 @@
 
 import asyncio
 from asyncio import Task
-from chomikuj.chomikuj_deb_downloader import ChomikujDebDownloader
 from config.argparser import ArgsParser
-from config.config import Config
 from utils.packagedownload import PackageDownload
 from objects.repometa import RepoMeta
 from objects.repo import Repo

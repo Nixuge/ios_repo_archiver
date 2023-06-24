@@ -1,4 +1,3 @@
-from abc import abstractmethod
 import jstyleson
 from config.config import Config
 

@@ -1,4 +1,3 @@
-from sqlite3 import Cursor
 from typing import Any
 from database.queries import Queries
 from objects.files.package import Package

@@ -3,13 +3,9 @@ import asyncio
 import hashlib
 import json
 import os
-from pprint import pprint
 import shutil
 import httpx
-from bs4 import BeautifulSoup
-from bs4.element import Tag
 
-from asyncio import Task
 from chomikuj.async_limiter import AsyncLimiter
 from chomikuj.data.chomikuj_data import DbVarsChomikuj, Endpoints, RequestData
 from chomikuj.data.chomikuj_file import ChomikujFile
